@@ -46,5 +46,16 @@
         android:background="@drawable/button_red"
         android:text="Playback" 
         android:textSize="20sp" />
+
+    <Button
+        android:id="@+id/sendAudio"
+        android:layout_margin="5dip"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:background="@drawable/button_red"
+        android:text="Send Audio" 
+        android:textSize="20sp" />
  	 
 </LinearLayout>
