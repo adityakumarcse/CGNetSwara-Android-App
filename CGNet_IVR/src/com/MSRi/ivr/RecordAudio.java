@@ -38,7 +38,7 @@ public class RecordAudio extends Activity {
 	private String mMainDir;
 	
 	/** Folder containing all audio files that have yet to be sent. */
-	private final String innerDir = "/To_Be_Sent";
+	private final String mInnerDir = "/To_Be_Sent";
 	
 	/** Name of the audio file created.	*/
 	private String mUniqueAudioRecording;
@@ -55,19 +55,19 @@ public class RecordAudio extends Activity {
 	
 	/** Starts recording audio. 
 	 *  TODO: Replace this button with an @ the beep mark. */
-	private Button start;
+	private Button mStart;
 	
 	/** Stops recording audio. This also saves the audio recording. 
 	 *  TODO: Confirm when this happens. */
-	private Button stop;
+	private Button mStop;
 	
 	/** Plays back the audio that the user recorded. */
-	private Button playback;
+	private Button mPlayback;
 	
 	/** Sends audio recording to a central location if there's an Internet 
 	 *  connection, if not saves the audio recording in a 
 	 *  known folder - to be sent later. */
-	private Button sendAudio;
+	private Button mSendAudio;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -75,25 +75,25 @@ public class RecordAudio extends Activity {
 		super.onCreate(savedInstanceState); 
 		setContentView(R.layout.record_audio); 
 
-		start = (Button) findViewById(R.id.start);
-		stop = (Button) findViewById(R.id.stop);
-		playback = (Button) findViewById(R.id.playback);
-		sendAudio = (Button) findViewById(R.id.sendAudio);
+		mStart = (Button) findViewById(R.id.start);
+		mStop = (Button) findViewById(R.id.stop);
+		mPlayback = (Button) findViewById(R.id.playback);
+		mSendAudio = (Button) findViewById(R.id.sendAudio);
 
 		// At first, the only option the user has is to record audio
-		start.setEnabled(true);
-		stop.setEnabled(false);
-		playback.setEnabled(false);
-		sendAudio.setEnabled(false);
+		mStart.setEnabled(true);
+		mStop.setEnabled(false);
+		mPlayback.setEnabled(false);
+		mSendAudio.setEnabled(false);
 		
 		// Create folders for the audio files 
 		setupDirectory();
 	
-		start.setOnClickListener(new OnClickListener() { 
+		mStart.setOnClickListener(new OnClickListener() { 
 			@Override
 			public void onClick(View arg) { 		
-				stop.setEnabled(true);
-				start.setEnabled(false);
+				mStop.setEnabled(true);
+				mStart.setEnabled(false);
 				
 				stopPlayingAudio(mCGNetAudio);   
 				startRecording();  
@@ -101,34 +101,34 @@ public class RecordAudio extends Activity {
 		}); 
 
 
-		stop.setOnClickListener(new OnClickListener() { 
+		mStop.setOnClickListener(new OnClickListener() { 
 			@Override
 			public void onClick(View arg) {
-				stop.setEnabled(false); 
-				playback.setEnabled(true);
-				sendAudio.setEnabled(true);
+				mStop.setEnabled(false); 
+				mPlayback.setEnabled(true);
+				mSendAudio.setEnabled(true);
 				
 				stopPlayingAudio(mCGNetAudio);  
 				stopRecording();
 			}  
 		});
 
-		playback.setOnClickListener(new OnClickListener() { 
+		mPlayback.setOnClickListener(new OnClickListener() { 
 			@Override
 			public void onClick(View arg) {
-				stop.setEnabled(false);
-				start.setEnabled(false);
+				mStop.setEnabled(false);
+				mStart.setEnabled(false);
 				// TODO: Change this so that it's no disabled and 
 				// people can listen to their audio files more than once
-				playback.setEnabled(false); 
-				sendAudio.setEnabled(true);
+				mPlayback.setEnabled(false); 
+				mSendAudio.setEnabled(true);
 				
 				stopPlayingAudio(mCGNetAudio); 
 				startPlaying();
 			}
 		});
 
-		sendAudio.setOnClickListener(new OnClickListener() { 
+		mSendAudio.setOnClickListener(new OnClickListener() { 
 			@Override
 			public void onClick(View arg) { 
 				stopPlayingAudio(mCGNetAudio);  // Audio really shouldn't be playing at this point
@@ -150,7 +150,7 @@ public class RecordAudio extends Activity {
 		 
 		// This folder will be queried when there's Internet - files that 
 		// need to be sent should be stored in here 
-		File dirInner = new File(mMainDir + innerDir);
+		File dirInner = new File(mMainDir + mInnerDir);
 		if(!dirInner.exists() || !dirInner.isDirectory()) {
 			dirInner.mkdir();
 		} 
@@ -248,82 +248,8 @@ public class RecordAudio extends Activity {
 
 	/** Sends the audio file to a central location */
 	private void sendData() { 
-		SendEmailAsyncTask task = new SendEmailAsyncTask();
-		task.execute();  
+		SendAudioFile audiofile = new SendAudioFile(this, mMainDir, mInnerDir, mUniqueAudioRecording);
 	} 
-
-	
-	class SendEmailAsyncTask extends AsyncTask <Void, Void, Boolean> {
-		String TAG = "SendEmailAsyncTask";  		
-	    Mail m = new Mail("cgnet112358@gmail.com", "cgnetswara");
-
-	    public SendEmailAsyncTask() { 
-	        String[] toArr = { "krittika.dsilva@gmail.com"};
-	        m.setTo(toArr);
-	        m.setFrom("cgnet112358@gmail.com");
-	        m.setSubject("Email send on the first try.");
-	        
-	        TelephonyManager tMgr = (TelephonyManager) RecordAudio.this.getSystemService(Context.TELEPHONY_SERVICE);
-	        String mPhoneNumber = tMgr.getLine1Number();
-	        
-	        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss");
-	        String currentDateandTime = sdf.format(new Date());
-	         
-	        String body = "Email sent from phone number: " + mPhoneNumber;
-	        body += "Time/data sent at: " + currentDateandTime;
-	        
-	        m.setBody(body);
-	        
-	        try {
-				m.addAttachment(mMainDir + mUniqueAudioRecording);
-			} catch (Exception e) { 
-				e.printStackTrace();
-			}
-	    }
-
-	    @Override
-	    protected Boolean doInBackground(Void... params) { 
-	        try { 
-	        	if (m.send()) { 
-	        		Log.e(TAG, "email sent");
-	        	} else { 
-	        		Log.e(TAG, "no internet, email cannot be sent");
-	        		saveEmail(m); // TODO: Is this how we want to do it?
-	        	}
-	            return true;
-	        } catch (AuthenticationFailedException e) {
-	            Log.e(SendEmailAsyncTask.class.getName(), "Bad account details");
-	            e.printStackTrace();
-	            return false;
-	        } catch (MessagingException e) {
-	            Log.e(SendEmailAsyncTask.class.getName(), " " + e);
-	            e.printStackTrace();
-	            return false;
-	        } catch (Exception e) {
-	        	Log.e(TAG, "" + e);
-	            e.printStackTrace();
-	            return false;
-	        }
-	    } 
-	}
-	
-	
-	public void saveEmail(Mail m) {  
-		String emailInfo = "TO: krittika.dsilva@gmail.com";
- 		
-		File myFile = new File(mMainDir + innerDir + mUniqueAudioRecording); 
-        try {
-			myFile.createNewFile();
-	        FileOutputStream fOut = new FileOutputStream(myFile);
-	        OutputStreamWriter myOutWriter = 
-	                                new OutputStreamWriter(fOut);
-	        myOutWriter.append(emailInfo);
-	        myOutWriter.close();
-	        fOut.close();
-		} catch (IOException e) { 
-			e.printStackTrace();
-		} 
-	}
-	
+  	
 
 }

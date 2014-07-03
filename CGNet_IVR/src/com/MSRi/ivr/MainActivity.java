@@ -22,19 +22,19 @@ public class MainActivity extends Activity {
 	protected static final String TAG = "MainActivity";
 	
 	/** Calls the PlayAudio class at a set interval. */
-	private Timer timer;
+	private Timer mTimer;
 	
 	/** Plays a recording instructing the user.  */
-	private PlayAudio playAudio;
+	private PlayAudio mPlayAudio;
 	
 	/** Used to play the audio on the device. */
-	private MediaPlayer mp;
+	private MediaPlayer mCGNetAudio;
 	
 	/** Opens an activity that allows a user to record and send a message. */
-	private Button one;
+	private Button mOne;
 	
 	/** Opens an activity that allows a user to listen to recordings. */
-	private Button two;
+	private Button mTwo;
 	
 	/** Called when the activity is first created. */
     @Override
@@ -42,30 +42,30 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
-        one = (Button) findViewById(R.id.one);
-        two = (Button) findViewById(R.id.two);
+        mOne = (Button) findViewById(R.id.one);
+        mTwo = (Button) findViewById(R.id.two);
         
-        if(timer != null){
-            timer.cancel();
+        if(mTimer != null){
+            mTimer.cancel();
         }
         
-        timer = new Timer();
-        playAudio = new PlayAudio();
+        mTimer = new Timer();
+        mPlayAudio = new PlayAudio();
             	
-        one.setOnClickListener(new OnClickListener() { 
+        mOne.setOnClickListener(new OnClickListener() { 
 			@Override
 			public void onClick(View arg) {
-				stopPlayingAudio(mp); 
-				timer.cancel();
+				stopPlayingAudio(mCGNetAudio); 
+				mTimer.cancel();
 				recordInput();
 			}  
         }); 
         
-        two.setOnClickListener(new OnClickListener() {
+        mTwo.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg) {
-				stopPlayingAudio(mp); 
-				timer.cancel();
+				stopPlayingAudio(mCGNetAudio); 
+				mTimer.cancel();
 				loadRecordings();
 			}  
         });
@@ -92,16 +92,16 @@ public class MainActivity extends Activity {
     @Override
     public void onResume() {
         super.onResume();   
-        playAudio = new PlayAudio();
-    	mp = MediaPlayer.create(MainActivity.this, R.raw.welcome);
-    	mp.start(); 
+        mPlayAudio = new PlayAudio();
+    	mCGNetAudio = MediaPlayer.create(MainActivity.this, R.raw.welcome);
+    	mCGNetAudio.start(); 
     	
-        if(timer != null){
-            timer.cancel();
+        if(mTimer != null){
+            mTimer.cancel();
         }
         
-        timer = new Timer();
-        timer.schedule(playAudio, 3000, 10000); 
+        mTimer = new Timer();
+        mTimer.schedule(mPlayAudio, 3000, 10000); 
     }
     
     /** Called when the activity is paused; releases resources back to the 
@@ -109,9 +109,9 @@ public class MainActivity extends Activity {
     @Override
     protected void onPause() {
         super.onPause();  
-        stopPlayingAudio(mp);   
-        playAudio.stop();
-        timer.cancel(); 
+        stopPlayingAudio(mCGNetAudio);   
+        mPlayAudio.stop();
+        mTimer.cancel(); 
     }
     
     /** Opens a new activity to allow the user to record audio content. */
