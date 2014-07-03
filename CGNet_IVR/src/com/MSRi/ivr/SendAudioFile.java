@@ -14,18 +14,35 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.telephony.TelephonyManager;
 import android.util.Log;
- 
 
+/** 
+ * This file 
+ * 
+ * @author Krittika D'Silva 
+ */
 public class SendAudioFile {
 
-	public SendAudioFile(Context context, String outerDir, String innerDir, String fileName) { 
-		
-		
+	/** */
+	private Context mRecordAudioContext;
 	
+	/** CGNet Swara's main directory with audio files. */
+	private String mMainDir;
+	
+	/** Folder containing all audio files that have yet to be sent. */
+	private String mInnerDir;
+	
+	/** Name of the audio file created.	*/
+	private String mUniqueAudioRecording;
+	
+	
+	public SendAudioFile(Context context, String outerDir, String innerDir, String fileName) { 
+		mRecordAudioContext = context;
+		mMainDir = outerDir;
+		mInnerDir = innerDir;
+		mUniqueAudioRecording = fileName; 
 	}
 	
-	public void sendEmail() { 
-		
+	public void sendEmail() {  
 		SendEmailAsyncTask task = new SendEmailAsyncTask();
 		task.execute();  
 	}
@@ -40,7 +57,7 @@ public class SendAudioFile {
 	        m.setFrom("cgnet112358@gmail.com");
 	        m.setSubject("Email send on the first try.");
 	        
-	        TelephonyManager tMgr = (TelephonyManager) RecordAudio.this.getSystemService(Context.TELEPHONY_SERVICE);
+	        TelephonyManager tMgr = (TelephonyManager) mRecordAudioContext.getSystemService(Context.TELEPHONY_SERVICE);
 	        String mPhoneNumber = tMgr.getLine1Number();
 	        
 	        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss");
@@ -88,7 +105,7 @@ public class SendAudioFile {
 	public void saveEmail(Mail m) {  
 		String emailInfo = "TO: krittika.dsilva@gmail.com";
  		
-		File myFile = new File(mMainDir + innerDir + mUniqueAudioRecording); 
+		File myFile = new File(mMainDir + mInnerDir + mUniqueAudioRecording); 
         try {
 			myFile.createNewFile();
 	        FileOutputStream fOut = new FileOutputStream(myFile);

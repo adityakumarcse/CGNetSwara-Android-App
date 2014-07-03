@@ -249,6 +249,7 @@ public class RecordAudio extends Activity {
 	/** Sends the audio file to a central location */
 	private void sendData() { 
 		SendAudioFile audiofile = new SendAudioFile(this, mMainDir, mInnerDir, mUniqueAudioRecording);
+		audiofile.sendEmail();
 	} 
   	
 
