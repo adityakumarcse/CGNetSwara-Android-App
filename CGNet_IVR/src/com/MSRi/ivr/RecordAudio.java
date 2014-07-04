@@ -1,37 +1,18 @@
 package com.MSRi.ivr;
 
-import java.io.File;
-import java.util.Date;  
-
+import java.io.File;  
 import android.util.Log;
 import android.os.Bundle;
 import android.view.Menu;
-import android.view.View;
-
+import android.view.View; 
 import java.util.Calendar;
 import java.io.IOException;  
-
-import android.app.Activity;
-import android.os.AsyncTask;
+import android.app.Activity; 
 import android.widget.Button;
-import android.os.Environment;
-import android.content.Context;
-
-import java.io.FileOutputStream;
-
-import android.media.MediaPlayer;
-
-import java.io.OutputStreamWriter;
-import java.text.SimpleDateFormat;
-
-import android.media.MediaRecorder;
-
-import javax.mail.MessagingException;
-
-import android.view.View.OnClickListener;
-import android.telephony.TelephonyManager;
-
-import javax.mail.AuthenticationFailedException;
+import android.os.Environment;  
+import android.media.MediaPlayer; 
+import android.media.MediaRecorder; 
+import android.view.View.OnClickListener; 
 
 /** This screen allows the user to record an audio message.
  *  They can then chose to send the recording off to a central location. 

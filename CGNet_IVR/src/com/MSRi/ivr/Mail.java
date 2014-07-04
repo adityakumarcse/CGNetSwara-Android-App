@@ -1,29 +1,23 @@
 package com.MSRi.ivr;
- 
-import java.net.UnknownHostException;
+  
 import java.util.Date;
-import java.util.Properties;
-
-import javax.activation.CommandMap;
-import javax.activation.DataHandler;
-import javax.activation.DataSource;
-import javax.activation.FileDataSource;
-import javax.activation.MailcapCommandMap;
-import javax.mail.BodyPart;
-import javax.mail.MessagingException;
-import javax.mail.Multipart;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
-
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.util.Log;
+import javax.mail.Session;
+import javax.mail.BodyPart;
+import java.util.Properties;
+import javax.mail.Multipart;
+import javax.mail.Transport;
+import javax.activation.CommandMap;
+import javax.activation.DataSource;
+import javax.activation.DataHandler;
+import javax.mail.MessagingException;
+import javax.activation.FileDataSource;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMultipart;
+import javax.mail.PasswordAuthentication;
+import javax.activation.MailcapCommandMap;
+import javax.mail.internet.InternetAddress;
 
 public class Mail extends javax.mail.Authenticator {
 	private static final String TAG = "Mail";
