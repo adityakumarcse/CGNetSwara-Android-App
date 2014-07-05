@@ -38,7 +38,7 @@
 			android:label="@string/app_name" >
 		</activity>
         		
-	    <receiver android:name=".ReceiverName" >
+	    <receiver android:name=".Receiver" >
 		    <intent-filter> 
 		        <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
 		    </intent-filter>
