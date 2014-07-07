@@ -68,9 +68,12 @@ public final class R {
         public static final int begin=0x7f060004;
         public static final int hello_world=0x7f060002;
         public static final int main_title=0x7f060003;
-        public static final int one=0x7f060005;
-        public static final int three=0x7f060007;
-        public static final int two=0x7f060006;
+        public static final int one=0x7f060006;
+        public static final int playback=0x7f060009;
+        public static final int send=0x7f06000a;
+        public static final int three=0x7f060008;
+        public static final int two=0x7f060007;
+        public static final int zero=0x7f060005;
     }
     public static final class style {
         /** 

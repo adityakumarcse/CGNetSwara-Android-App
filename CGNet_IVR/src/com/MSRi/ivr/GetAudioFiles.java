@@ -5,9 +5,8 @@ import android.view.Menu;
 import android.app.Activity; 
 
 public class GetAudioFiles extends Activity {
-	private static final String TAG = "RecordAudio";
-	 
-    // TODO : This activity needs to be implemented.
+//	private static final String TAG = "RecordAudio";
+	  
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -21,6 +20,5 @@ public class GetAudioFiles extends Activity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
-    }
-     
+    }    
 }

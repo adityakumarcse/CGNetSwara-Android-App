@@ -1,24 +1,20 @@
 package com.MSRi.ivr;
 
 import java.io.File;  
-
 import android.util.Log;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.view.Menu;
 import android.view.View; 
-
 import java.util.Calendar;
 import java.io.IOException;  
-
 import android.app.Activity; 
-import android.content.Intent;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
-import android.os.Environment;  
-import android.media.MediaPlayer; 
+import android.widget.Button; 
+import android.content.Intent;
+import android.os.Environment;
+import android.widget.TextView;  
+import android.media.MediaPlayer;
+import android.os.CountDownTimer; 
 import android.media.MediaRecorder; 
 import android.view.View.OnClickListener; 
 

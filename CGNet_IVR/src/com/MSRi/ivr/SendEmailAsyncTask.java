@@ -1,24 +1,16 @@
 package com.MSRi.ivr;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.io.OutputStream;
-
 import android.util.Log;
-
-import java.io.IOException;
-
+import java.io.InputStream;
 import android.os.AsyncTask;
+import java.io.OutputStream;
 import android.content.Context;
-
+import java.io.FileInputStream;
 import java.io.FileOutputStream; 
-
+import java.io.FileNotFoundException;
 import javax.mail.MessagingException;
-
 import android.telephony.TelephonyManager;
-
 import javax.mail.AuthenticationFailedException;
 
 /** This class allows to perform background operations and
