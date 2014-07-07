@@ -66,6 +66,5 @@
         android:gravity="center"
         android:background="@drawable/button_red"
         android:text="Send Audio" 
-        android:textSize="20sp" />
- 	 
+        android:textSize="20sp" /> 	 
 </LinearLayout>

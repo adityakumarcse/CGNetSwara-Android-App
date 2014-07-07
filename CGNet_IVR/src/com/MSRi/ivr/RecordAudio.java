@@ -16,6 +16,7 @@ import android.content.Intent;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.os.Environment;  
 import android.media.MediaPlayer; 
 import android.media.MediaRecorder; 
@@ -24,8 +25,7 @@ import android.view.View.OnClickListener;
 /** This screen allows the user to record an audio message.
  *  They can then chose to send the recording off to a central location. 
  *  The user is able to listen to the recording prior to sending the off.  
- *  
- *  TODO : Add three minute count down 
+ *   
  *  TODO : Add start @ the beep & allow repeated listens to audio recording
  *  
  *  @author Krittika D'Silva (krittika.dsilva@gmail.com) */
@@ -36,7 +36,7 @@ public class RecordAudio extends Activity {
 	private String mMainDir;
 	
 	/** Folder containing all audio files that have yet to be sent. */
-	private final String mInnerDir = "/To_Be_Sent";
+	private final String mInnerDir = "/ToBeSent";
 	
 	/** Name of the audio file created.	*/
 	private String mUniqueAudioRecording;
@@ -55,8 +55,7 @@ public class RecordAudio extends Activity {
 	 *  TODO: Replace this button with an @ the beep mark. */
 	private Button mStart;
 	
-	/** Stops recording audio. This also saves the audio recording. 
-	 *  TODO: Confirm when this happens. */
+	/** Stops recording audio. */
 	private Button mStop;
 	
 	/** Plays back the audio that the user recorded. */
@@ -72,6 +71,7 @@ public class RecordAudio extends Activity {
 
 	/** Shows time remaining. */
 	private CountDownTimer timer;
+	 
 	
 	/** Called when the activity is first created. */
 	@Override
@@ -83,7 +83,7 @@ public class RecordAudio extends Activity {
 		mStop = (Button) findViewById(R.id.stop);
 		mPlayback = (Button) findViewById(R.id.playback);
 		mSendAudio = (Button) findViewById(R.id.sendAudio);
-		mCountdown = (TextView) findViewById(R.id.time);
+		mCountdown = (TextView) findViewById(R.id.time); 
 		
 		// At first, the only option the user has is to record audio
 		mStart.setEnabled(true);
@@ -138,8 +138,13 @@ public class RecordAudio extends Activity {
 			public void onClick(View arg) { 
 				stopPlayingAudio(mCGNetAudio);  // Audio really shouldn't be playing at this point
 				sendData(); 
+				Toast.makeText(RecordAudio.this,"Your file has been sent.", 
+		                Toast.LENGTH_SHORT).show();
+		    	Intent intent = new Intent(RecordAudio.this, MainActivity.class);
+		    	startActivity(intent);
 			}
 		});
+		
 		
 		timer =  new CountDownTimer(3*60*1000, 1000) {
 	        public void onTick(long millis) {
@@ -181,7 +186,7 @@ public class RecordAudio extends Activity {
 					  + c.get(Calendar.MINUTE) + "_" + c.get(Calendar.SECOND);
 		
 		// TODO: Make sure paths are right 
-		mUniqueAudioRecording = "/" + date + "__" + time + ".mp3";
+		mUniqueAudioRecording = "/" + date + "__" + time + ".wav";
 	}
 
 	/** Releases resources back to the system.  */

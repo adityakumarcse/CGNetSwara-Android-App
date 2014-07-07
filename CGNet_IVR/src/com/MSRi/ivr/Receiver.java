@@ -20,7 +20,7 @@ public class Receiver extends BroadcastReceiver {
 	private String mMainDir;
 	
 	/** Folder containing all audio files that have yet to be sent. */
-	private final String mInnerDir = "/To_Be_Sent";
+	private final String mInnerDir = "/ToBeSent";
 	  
 	/** Called when there's a change in connectivity. Iterates through files 
 	 * that need to be sent and sends each one if there's Internet. */ 
