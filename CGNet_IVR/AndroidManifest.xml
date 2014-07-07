@@ -41,6 +41,7 @@
 	    <receiver android:name=".Receiver" >
 		    <intent-filter> 
 		        <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+		        <action android:name="com.android.CUSTOM_INTENT" />
 		    </intent-filter>
 		</receiver>
     </application>

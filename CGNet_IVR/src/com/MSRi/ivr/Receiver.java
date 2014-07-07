@@ -1,8 +1,10 @@
 package com.MSRi.ivr;
 
 import java.io.File;  
+
 import android.content.Intent;
 import android.os.Environment;
+import android.util.Log;
 import android.content.Context; 
 import android.net.ConnectivityManager; 
 import android.content.BroadcastReceiver;
@@ -12,7 +14,7 @@ import android.content.BroadcastReceiver;
  *  @author Krittika D'Silva
  * */
 public class Receiver extends BroadcastReceiver {
-	private static final String TAG = "ReceiverName";
+	private static final String TAG = "Receiver";
 	  
 	/** CGNet Swara's main directory with audio files. */
 	private String mMainDir;
@@ -24,21 +26,24 @@ public class Receiver extends BroadcastReceiver {
 	 * that need to be sent and sends each one if there's Internet. */ 
     @Override
     public void onReceive(Context context, Intent intent) {
+    	Log.e(TAG,  "3. In onRecieve");
 		mMainDir = Environment.getExternalStorageDirectory().getAbsolutePath();
 		mMainDir += "/CGNetSwara"; 
     	ConnectivityManager cm = ((ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE));
         if (cm == null)
             return;
-        
-        if (cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnected()) {
+       
+        if ((cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnected()) 
+        	|| intent.getAction().equals("com.android.CUSTOM_INTENT")) {
         	File dir = new File(mMainDir + mInnerDir); // Contains files to be sent
         	File[] directoryListing = dir.listFiles();
         	
         	if (directoryListing != null) {
-        		for (File child : directoryListing) {
-        	    	String filePath = child.getName();
+        		for (File child : directoryListing) { 
+        	    	String fileName = child.getName();
+        	    	Log.e(TAG, "4. Trying to send: " + fileName);
         			SendEmailAsyncTask task = new SendEmailAsyncTask(context, 
-        										  mMainDir, mInnerDir, filePath);
+        										  mMainDir, mInnerDir, "/" + fileName);
         			task.execute(); 
         	    }
         	}

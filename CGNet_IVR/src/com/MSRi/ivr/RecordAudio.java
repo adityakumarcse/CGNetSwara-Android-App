@@ -1,13 +1,17 @@
 package com.MSRi.ivr;
 
 import java.io.File;  
+
 import android.util.Log;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View; 
+
 import java.util.Calendar;
 import java.io.IOException;  
+
 import android.app.Activity; 
+import android.content.Intent;
 import android.widget.Button;
 import android.os.Environment;  
 import android.media.MediaPlayer; 
@@ -203,8 +207,10 @@ public class RecordAudio extends Activity {
 		mRecorder = new MediaRecorder();
 		mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
 		mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-		mRecorder.setOutputFile(mMainDir + mUniqueAudioRecording);
+		mRecorder.setOutputFile(mMainDir + mInnerDir + mUniqueAudioRecording);
 		mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+		
+		Log.e(TAG, "1. Create file: " + mMainDir + mInnerDir + mUniqueAudioRecording);
 		
 		try {
 			mRecorder.prepare(); 
@@ -219,7 +225,7 @@ public class RecordAudio extends Activity {
 		mUserAudio = new MediaPlayer();
 		try {
 			// Saved in the main folder 
-			mUserAudio.setDataSource(mMainDir + mUniqueAudioRecording);
+			mUserAudio.setDataSource(mMainDir + mInnerDir + mUniqueAudioRecording);
 			mUserAudio.prepare();
 			mUserAudio.start();
 		} catch (IOException e) {
@@ -239,9 +245,10 @@ public class RecordAudio extends Activity {
 
 	/** Sends the audio file to a central location */
 	private void sendData() { 
-		SendEmailAsyncTask task = new SendEmailAsyncTask(this, mMainDir, 
-				  							mInnerDir, mUniqueAudioRecording);
-		task.execute();  
+		Log.e(TAG, "2. Sending Data: Should iterate through files in the dir now");
+		Intent intent = new Intent();
+		intent.setAction("com.android.CUSTOM_INTENT");
+		sendBroadcast(intent); 
 	} 
   	
 

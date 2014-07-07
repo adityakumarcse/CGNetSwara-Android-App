@@ -54,6 +54,7 @@ class SendEmailAsyncTask extends AsyncTask <Void, Void, Boolean> {
 	 * 
 	 * */
     public SendEmailAsyncTask(Context context, String outerDir, String innerDir, String fileName) {
+    	Log.e(TAG, "5. Trying to send: " + fileName);
     	mMail = new Mail(mFromAdddress, "cgnetswara"); // TODO 
     	mMainDir = outerDir;
     	mInnerDir = innerDir;
@@ -69,9 +70,9 @@ class SendEmailAsyncTask extends AsyncTask <Void, Void, Boolean> {
         String mPhoneNumber = tMgr.getLine1Number(); //TODO is this right?
         String body = "Email sent from phone number: " + mPhoneNumber;
         mMail.setBody(body);
-        
+        Log.e(TAG, "6. Location of file: " + mMainDir + mInnerDir + mUniqueAudioRecording);
         try {
-			mMail.addAttachment(mMainDir + mUniqueAudioRecording);
+			mMail.addAttachment(mMainDir + mInnerDir + mUniqueAudioRecording);
 		} catch (Exception e) { 
 			Log.e(TAG, "Problem including an attachment " +  e.toString());
 		}
@@ -86,6 +87,7 @@ class SendEmailAsyncTask extends AsyncTask <Void, Void, Boolean> {
         try { 
         	if (mMail.send()) {
         		mEmailSent = true;
+        		moveFile(mMainDir + mInnerDir, mUniqueAudioRecording, mMainDir);
         		Log.e(TAG, "Email was sent");
         	} else { 
         		mEmailSent = false;
@@ -126,6 +128,10 @@ class SendEmailAsyncTask extends AsyncTask <Void, Void, Boolean> {
     
     
     private void moveFile(String inputPath, String inputFile, String outputPath) {
+    	Log.e(TAG, "inputPath: " + inputPath);
+    	Log.e(TAG, "inputFile: " + inputFile);
+    	Log.e(TAG, "outputPath: " + outputPath);
+    	
         InputStream in = null;
         OutputStream out = null;
         try { 
@@ -153,10 +159,10 @@ class SendEmailAsyncTask extends AsyncTask <Void, Void, Boolean> {
 
             // delete the original file
             new File(inputPath + inputFile).delete();  
-        } catch (FileNotFoundException fnfe1) {
-            Log.e("tag", fnfe1.getMessage());
+        } catch (FileNotFoundException fnfe) {
+            Log.e(TAG, fnfe.getMessage());
         } catch (Exception e) {
-            Log.e("tag", e.getMessage());
+            Log.e(TAG, e.getMessage());
         }
     }
 }
