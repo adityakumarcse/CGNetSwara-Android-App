@@ -91,8 +91,7 @@ class SendEmailAsyncTask extends AsyncTask <Void, Void, Boolean> {
         		Log.e(TAG, "Email was sent");
         	} else { 
         		mEmailSent = false;
-        		Log.e(TAG, "Email not sent");
-        		saveAudioFile(mMail); 
+        		Log.e(TAG, "Email not sent"); 
         	}
             return true;
         } catch (AuthenticationFailedException e) {
@@ -109,19 +108,7 @@ class SendEmailAsyncTask extends AsyncTask <Void, Void, Boolean> {
             return false;
         }
     } 
-    
-    /** this has problems and needs to be changed */
-	private void saveAudioFile(Mail m) {    
-		File myFile = new File(mMainDir + mInnerDir + mUniqueAudioRecording); 
-        try {
-			myFile.createNewFile();
-	        FileOutputStream fOut = new FileOutputStream(myFile);
-	        fOut.close();
-		} catch (IOException e) { 
-			e.printStackTrace();
-		} 
-	}
-	
+       
     public boolean emailSent() { 
     	return mEmailSent;
     }

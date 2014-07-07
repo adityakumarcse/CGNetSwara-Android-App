@@ -34,15 +34,16 @@ public final class R {
         public static final int user=0x7f02000a;
     }
     public static final class id {
-        public static final int action_settings=0x7f09000a;
+        public static final int action_settings=0x7f09000b;
         public static final int list=0x7f090003;
         public static final int one=0x7f090001;
-        public static final int playback=0x7f090006;
-        public static final int progressBar=0x7f090009;
-        public static final int sendAudio=0x7f090007;
-        public static final int start=0x7f090004;
-        public static final int stop=0x7f090005;
-        public static final int textView=0x7f090008;
+        public static final int playback=0x7f090007;
+        public static final int progressBar=0x7f09000a;
+        public static final int sendAudio=0x7f090008;
+        public static final int start=0x7f090005;
+        public static final int stop=0x7f090006;
+        public static final int textView=0x7f090009;
+        public static final int time=0x7f090004;
         public static final int two=0x7f090002;
         public static final int user=0x7f090000;
     }

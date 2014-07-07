@@ -4,6 +4,7 @@ import java.io.File;
 
 import android.util.Log;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.view.Menu;
 import android.view.View; 
 
@@ -13,6 +14,8 @@ import java.io.IOException;
 import android.app.Activity; 
 import android.content.Intent;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.os.Environment;  
 import android.media.MediaPlayer; 
 import android.media.MediaRecorder; 
@@ -63,7 +66,13 @@ public class RecordAudio extends Activity {
 	 *  connection, if not saves the audio recording in a 
 	 *  known folder - to be sent later. */
 	private Button mSendAudio;
+	
+	/** Displays the amount of time left - each recording can be 3 mins max */
+	private TextView mCountdown;
 
+	/** Shows time remaining. */
+	private CountDownTimer timer;
+	
 	/** Called when the activity is first created. */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +83,8 @@ public class RecordAudio extends Activity {
 		mStop = (Button) findViewById(R.id.stop);
 		mPlayback = (Button) findViewById(R.id.playback);
 		mSendAudio = (Button) findViewById(R.id.sendAudio);
-
+		mCountdown = (TextView) findViewById(R.id.time);
+		
 		// At first, the only option the user has is to record audio
 		mStart.setEnabled(true);
 		mStop.setEnabled(false);
@@ -102,7 +112,7 @@ public class RecordAudio extends Activity {
 				mStop.setEnabled(false); 
 				mPlayback.setEnabled(true);
 				mSendAudio.setEnabled(true);
-				
+				timer.cancel();
 				stopPlayingAudio(mCGNetAudio);  
 				stopRecording();
 			}  
@@ -130,6 +140,18 @@ public class RecordAudio extends Activity {
 				sendData(); 
 			}
 		});
+		
+		timer =  new CountDownTimer(3*60*1000, 1000) {
+	        public void onTick(long millis) {
+	            int seconds = (int) (millis / 1000) % 60 ;
+	            int minutes = (int) ((millis / (1000*60)) % 60); 
+	            String text = String.format("%02d minutes and %02d seconds remaining", minutes, seconds);
+	            mCountdown.setText(text);
+	        }
+	        public void onFinish() {
+	        	mStop.performClick(); 
+	        }
+	    };
 	}
 
 	/** Sets up file structure for audio recordings. **/
@@ -204,10 +226,12 @@ public class RecordAudio extends Activity {
 
 	/** Creates an audio recording using the phone mic as the audio source. */
 	private void startRecording() { 
+		timer.start(); 
+		
 		mRecorder = new MediaRecorder();
 		mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
 		mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-		mRecorder.setOutputFile(mMainDir + mInnerDir + mUniqueAudioRecording);
+		mRecorder.setOutputFile(mMainDir + mInnerDir + mUniqueAudioRecording); 
 		mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
 		
 		Log.e(TAG, "1. Create file: " + mMainDir + mInnerDir + mUniqueAudioRecording);
@@ -232,8 +256,7 @@ public class RecordAudio extends Activity {
 			Log.e(TAG, "StartPlaying() : prepare() failed");
 		}		
 	}
-
-
+ 
     /** Inflates the menu. Currently, there aren't any meaningful items
      *  to add to the action bar. */
     @Override
@@ -241,8 +264,7 @@ public class RecordAudio extends Activity {
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
-    
-
+     
 	/** Sends the audio file to a central location */
 	private void sendData() { 
 		Log.e(TAG, "2. Sending Data: Should iterate through files in the dir now");
@@ -250,6 +272,4 @@ public class RecordAudio extends Activity {
 		intent.setAction("com.android.CUSTOM_INTENT");
 		sendBroadcast(intent); 
 	} 
-  	
-
 }
