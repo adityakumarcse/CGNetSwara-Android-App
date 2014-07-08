@@ -60,6 +60,9 @@ class SendEmailAsyncTask extends AsyncTask <Void, Void, Boolean> {
         // Retrieve the user's phone number - used as a form of identification
         TelephonyManager tMgr = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
         String mPhoneNumber = tMgr.getLine1Number(); //TODO is this right?
+        
+        TelephonyManager.getDeviceId()
+        
         String body = "Email sent from phone number: " + mPhoneNumber;
         mMail.setBody(body);
         Log.e(TAG, "6. Location of file: " + mMainDir + mInnerDir + mUniqueAudioRecording);
