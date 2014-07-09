@@ -1,20 +1,28 @@
 package com.MSRi.ivr;
 
 import java.io.File;  
+
 import android.util.Log;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Menu;
 import android.view.View; 
+
 import java.util.Calendar;
 import java.io.IOException;  
+
 import android.app.Activity; 
+import android.widget.ImageButton;
 import android.widget.Toast;
 import android.widget.Button; 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Environment;
 import android.widget.TextView;  
 import android.media.MediaPlayer;
 import android.os.CountDownTimer; 
+import android.provider.MediaStore;
 import android.media.MediaRecorder; 
 import android.view.View.OnClickListener; 
 
@@ -48,7 +56,7 @@ public class RecordAudio extends Activity {
 	private MediaPlayer mCGNetAudio;
 	
 	/** Starts recording audio.  */
-	private Button mStart;
+	private Button mBack;
 	
 	/** Stops recording audio. */
 	private Button mStop;
@@ -61,42 +69,50 @@ public class RecordAudio extends Activity {
 	 *  known folder - to be sent later. */
 	private Button mSendAudio;
 	
+	private ImageButton mCamera;
+	
 	/** Displays the amount of time left - each recording can be 3 mins max */
 	private TextView mCountdown;
 
 	/** Shows time remaining. */
 	private CountDownTimer timer;
 	 
-	
+    /** The action code we use in our intent, 
+     *  this way we know we're looking at the response from our own action.  */
+    private static final int SELECT_PICTURE = 1;
+
+	/** Saves logs about the user */
+    private SaveUserLogs mUserLogs;
+    
 	/** Called when the activity is first created. */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState); 
 		setContentView(R.layout.record_audio); 
-
-		mStart = (Button) findViewById(R.id.start);
+ 
+		mBack = (Button) findViewById(R.id.start);
 		mStop = (Button) findViewById(R.id.stop);
 		mPlayback = (Button) findViewById(R.id.playback);
 		mSendAudio = (Button) findViewById(R.id.sendAudio);
 		mCountdown = (TextView) findViewById(R.id.time); 
+		mCamera = (ImageButton) findViewById(R.id.camera);
 		
 		// At first, the only option the user has is to record audio
-		mStart.setEnabled(true);
+		mBack.setEnabled(true);
 		mStop.setEnabled(false);
 		mPlayback.setEnabled(false);
 		mSendAudio.setEnabled(false);
+		mCamera.setVisibility(View.INVISIBLE);
 		
 		// Create folders for the audio files 
 		setupDirectory();
 	
-		mStart.setOnClickListener(new OnClickListener() { 
+		mBack.setOnClickListener(new OnClickListener() { 
 			@Override
 			public void onClick(View arg) { 		
-				mStop.setEnabled(true);
-				mStart.setEnabled(false);
-				
-				stopPlayingAudio(mCGNetAudio);   
-				startRecording();  
+				stopPlayingAudio(mCGNetAudio); // TODO: Stop recording too?
+		    	Intent intent = new Intent(RecordAudio.this, MainActivity.class);
+		    	startActivity(intent); 
 			}  
 		}); 
 
@@ -107,6 +123,7 @@ public class RecordAudio extends Activity {
 				mStop.setEnabled(false); 
 				mPlayback.setEnabled(true);
 				mSendAudio.setEnabled(true);
+				mCamera.setVisibility(View.VISIBLE);
 				timer.cancel();
 				stopPlayingAudio(mCGNetAudio);  
 				stopRecording();
@@ -117,7 +134,7 @@ public class RecordAudio extends Activity {
 			@Override
 			public void onClick(View arg) {
 				mStop.setEnabled(false);
-				mStart.setEnabled(false);
+				mBack.setEnabled(false);
 				// TODO: Change this so that it's no disabled and 
 				// people can listen to their audio files more than once
 				mPlayback.setEnabled(false); 
@@ -140,6 +157,17 @@ public class RecordAudio extends Activity {
 			}
 		});
 		
+		mCamera.setOnClickListener(new OnClickListener() { 
+			@Override
+			public void onClick(View arg) { 
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(intent,
+                        "Select Picture"), SELECT_PICTURE);
+			}
+		});
+		
 		
 		timer =  new CountDownTimer(3*60*1000, 1000) {
 	        public void onTick(long millis) {
@@ -152,8 +180,59 @@ public class RecordAudio extends Activity {
 	        	mStop.performClick(); 
 	        }
 	    };
+	    
+	    Runnable runnable = new Runnable() {
+	    	@Override
+	    	public void run() {  
+	    		mStop.setVisibility(View.VISIBLE);	
+	    		stopPlayingAudio(mCGNetAudio); 
+	    		startRecording(); 
+	    	}
+	    };
+	    // Waits 11 ms - for recording to finish
+	    Handler handler = new Handler();
+	    handler.postDelayed(runnable, 11000);
 	}
 
+	
+	
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            if (requestCode == SELECT_PICTURE) {
+                Uri selectedImageUri = data.getData();
+                String selectedImagePath = getPath(selectedImageUri);	// TODO: This path is important
+            }
+        }
+    }
+
+    /**
+     * helper to retrieve the path of an image URI
+     */
+    public String getPath(Uri uri) {
+            // just some safety built in 
+            if( uri == null ) {
+                // TODO perform some logging or show user feedback
+                return null;
+            }
+            // try to retrieve the image from the media store first
+            // this will only work for images selected from gallery
+            String[] projection = { MediaStore.Images.Media.DATA };
+            Cursor cursor = managedQuery(uri, projection, null, null, null);
+            if( cursor != null ){
+                int column_index = cursor
+                .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+                cursor.moveToFirst();
+                return cursor.getString(column_index);
+            }
+            // this is our fallback here
+            return uri.getPath();
+    }
+
+	
+	
+	
+	
+	
 	/** Sets up file structure for audio recordings. **/
 	private void setupDirectory() {
 		// This folder should have been created in MainActivity
@@ -172,15 +251,17 @@ public class RecordAudio extends Activity {
 			dirInner.mkdir();
 		} 
 		
-		// Name of audio file is the data and then time the audio was created.
-		// TODO: Incorporate phone number here to make it truly unique?
+		// Name of audio file is the data and then time the audio was created. 
 		Calendar c = Calendar.getInstance();
 		String date = c.get(Calendar.YEAR) + "_"+ c.get(Calendar.MONTH)
 					  + "_" + c.get(Calendar.DAY_OF_MONTH);
 		String time = c.get(Calendar.HOUR_OF_DAY) + "_" 
 					  + c.get(Calendar.MINUTE) + "_" + c.get(Calendar.SECOND);
 		 
-		mUniqueAudioRecording = "/" + date + "__" + time + ".wav";
+		mUniqueAudioRecording = "/" + date + "__" + time;
+		mUserLogs = new SaveUserLogs(mMainDir, mUniqueAudioRecording);
+		
+		mUniqueAudioRecording += ".wav"; 
 	}
 
 	/** Releases resources back to the system.  */
@@ -208,7 +289,8 @@ public class RecordAudio extends Activity {
 		// we're going to treat it like they paused the recording before 
 		// pausing the app
 		if(mStop.isEnabled()) { 
-			mStop.performClick(); 
+			timer.cancel(); 
+			stopRecording(); 
 		} 
 		stopPlayingAudio(mCGNetAudio);
 		stopPlayingAudio(mUserAudio);
@@ -225,8 +307,8 @@ public class RecordAudio extends Activity {
 	public void onResume() {
 		super.onResume();
 		// Audio should only play when the user hasn't recorded audio already 
-		if (mStart.isEnabled()) {
-			mCGNetAudio = MediaPlayer.create(this, R.raw.mistake_0_beep_start_finish_1);
+		if (mBack.isEnabled()) {
+			mCGNetAudio = MediaPlayer.create(this, R.raw.record_message);
 			mCGNetAudio.start(); 
 		}
 	}
@@ -234,7 +316,7 @@ public class RecordAudio extends Activity {
 	/** Creates an audio recording using the phone mic as the audio source. */
 	private void startRecording() { 
 		timer.start(); 
-		
+		 
 		mRecorder = new MediaRecorder();
 		mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
 		mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
@@ -275,8 +357,8 @@ public class RecordAudio extends Activity {
 	/** Sends the audio file to a central location */
 	private void sendData() { 
 		Log.e(TAG, "2. Sending Data: Should iterate through files in the dir now");
-		Intent intent = new Intent();
+		Intent intent = new Intent(); 
 		intent.setAction("com.android.CUSTOM_INTENT");
-		sendBroadcast(intent); 
+		sendBroadcast(intent); // TODO: I don't think this is working 
 	} 
 }

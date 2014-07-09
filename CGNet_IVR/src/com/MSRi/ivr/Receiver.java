@@ -32,7 +32,7 @@ public class Receiver extends BroadcastReceiver {
     	ConnectivityManager cm = ((ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE));
         if (cm == null)
             return;
-       
+       Log.e(TAG, intent.getAction());
         if (cm.getActiveNetworkInfo() != null || intent.getAction().equals("com.android.CUSTOM_INTENT")) {
         	File dir = new File(mMainDir + mInnerDir); // Contains files to be sent
         	File[] directoryListing = dir.listFiles();

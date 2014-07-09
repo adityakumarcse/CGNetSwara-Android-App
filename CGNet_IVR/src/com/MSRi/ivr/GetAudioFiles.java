@@ -34,7 +34,7 @@ public class GetAudioFiles extends Activity {
         mDownloadMore = (Button) findViewById(R.id.download_more);
         
 		// Create folders for the audio files 
-		setupDirectory();
+		//setupDirectory();
         
 		// Check
         populateListView();
