@@ -225,7 +225,7 @@ public class RecordAudio extends Activity {
 	public void onResume() {
 		super.onResume();
 		// Audio should only play when the user hasn't recorded audio already 
-		if (mStop.isEnabled()) {
+		if (mStart.isEnabled()) {
 			mCGNetAudio = MediaPlayer.create(this, R.raw.mistake_0_beep_start_finish_1);
 			mCGNetAudio.start(); 
 		}

@@ -34,7 +34,7 @@ public class MainActivity extends Activity {
 	private Button mOne;
 	
 	/** Opens an activity that allows a user to listen to recordings. */
-	private Button mTwo;
+	//private Button mTwo;
 	
 	/** Called when the activity is first created. */
     @Override
@@ -43,7 +43,7 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         
         mOne = (Button) findViewById(R.id.one);
-        mTwo = (Button) findViewById(R.id.two);
+      //  mTwo = (Button) findViewById(R.id.two);
         
         if(mTimer != null){
             mTimer.cancel();
@@ -61,14 +61,14 @@ public class MainActivity extends Activity {
 			}  
         }); 
         
-        mTwo.setOnClickListener(new OnClickListener() {
+ /*       mTwo.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg) {
 				stopPlayingAudio(mCGNetAudio); 
 				mTimer.cancel();
 				loadRecordings();
 			}  
-        });
+        }); */
         
         // Creates a folder for the app's recordings
         String path = Environment.getExternalStorageDirectory().getAbsolutePath();
@@ -101,7 +101,7 @@ public class MainActivity extends Activity {
         }
         
         mTimer = new Timer();
-        mTimer.schedule(mPlayAudio, 3000, 10000); 
+        mTimer.schedule(mPlayAudio, 3000, 8000); 
     }
     
     /** Called when the activity is paused; releases resources back to the 
@@ -122,10 +122,10 @@ public class MainActivity extends Activity {
     
     /** Opens a new activity to allow the user to view and listen to 
      *  recordings. */
-    private void loadRecordings() { 
+/*    private void loadRecordings() { 
     	Intent intent = new Intent(this, GetAudioFiles.class);
     	startActivity(intent);
-    }
+    } */
 
     /** Inflates the menu. Currently, there aren't any meaningful items
      *  to add to the action bar. */
@@ -144,7 +144,7 @@ public class MainActivity extends Activity {
     	@Override
     	public void run() { 
 	    	setVolumeControlStream(AudioManager.STREAM_MUSIC); 
-	    	mp = MediaPlayer.create(MainActivity.this, R.raw.record_1_listen_2);
+	    	mp = MediaPlayer.create(MainActivity.this, R.raw.record_1);
 	    	mp.start();
 	    }
     	

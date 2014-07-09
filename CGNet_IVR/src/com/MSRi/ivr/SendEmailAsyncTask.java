@@ -33,7 +33,10 @@ class SendEmailAsyncTask extends AsyncTask <Void, Void, Boolean> {
 	private String mUniqueAudioRecording;
 	
 	/** */
-	private final String mFromAdddress = "cgnet112358@gmail.com"; 
+	private final String mFromAdddress = EmailLogin.email; 
+	
+	/** */
+	private final String mFromPassword = EmailLogin.password;
 	
 	/** */
 	private final String mToAddress = "krittika.dsilva@gmail.com";
@@ -47,7 +50,7 @@ class SendEmailAsyncTask extends AsyncTask <Void, Void, Boolean> {
 	 * */
     public SendEmailAsyncTask(Context context, String outerDir, String innerDir, String fileName) {
     	Log.e(TAG, "5. Trying to send: " + fileName);
-    	mMail = new Mail(mFromAdddress, "cgnetswara"); // TODO 
+    	mMail = new Mail(mFromAdddress, mFromPassword);  
     	mMainDir = outerDir;
     	mInnerDir = innerDir;
         mUniqueAudioRecording = fileName;

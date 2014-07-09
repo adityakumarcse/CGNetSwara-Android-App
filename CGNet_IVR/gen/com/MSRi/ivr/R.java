@@ -25,26 +25,29 @@ public final class R {
         public static final int background2=0x7f020001;
         public static final int background_test=0x7f020002;
         public static final int button_red=0x7f020003;
-        public static final int cgnet=0x7f020004;
-        public static final int gradient_bg=0x7f020005;
-        public static final int gradient_bg_hover=0x7f020006;
-        public static final int ic_launcher=0x7f020007;
-        public static final int list_selector=0x7f020008;
-        public static final int test=0x7f020009;
-        public static final int user=0x7f02000a;
+        public static final int camera=0x7f020004;
+        public static final int cgnet=0x7f020005;
+        public static final int gradient_bg=0x7f020006;
+        public static final int gradient_bg_hover=0x7f020007;
+        public static final int ic_launcher=0x7f020008;
+        public static final int list_selector=0x7f020009;
+        public static final int test=0x7f02000a;
+        public static final int user=0x7f02000b;
     }
     public static final class id {
-        public static final int action_settings=0x7f09000b;
-        public static final int list=0x7f090003;
+        public static final int action_settings=0x7f09000d;
+        public static final int camera=0x7f090005;
+        public static final int download_more=0x7f090002;
+        public static final int list=0x7f090004;
         public static final int one=0x7f090001;
-        public static final int playback=0x7f090007;
-        public static final int progressBar=0x7f09000a;
-        public static final int sendAudio=0x7f090008;
-        public static final int start=0x7f090005;
-        public static final int stop=0x7f090006;
-        public static final int textView=0x7f090009;
-        public static final int time=0x7f090004;
-        public static final int two=0x7f090002;
+        public static final int playback=0x7f090009;
+        public static final int progressBar=0x7f09000c;
+        public static final int progressbar=0x7f090003;
+        public static final int sendAudio=0x7f09000a;
+        public static final int start=0x7f090007;
+        public static final int stop=0x7f090008;
+        public static final int textView=0x7f09000b;
+        public static final int time=0x7f090006;
         public static final int user=0x7f090000;
     }
     public static final class layout {
@@ -66,6 +69,7 @@ public final class R {
         public static final int action_settings=0x7f060001;
         public static final int app_name=0x7f060000;
         public static final int begin=0x7f060004;
+        public static final int download_more=0x7f06000b;
         public static final int hello_world=0x7f060002;
         public static final int main_title=0x7f060003;
         public static final int one=0x7f060006;

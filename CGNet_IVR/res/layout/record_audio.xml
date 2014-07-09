@@ -7,6 +7,16 @@
     android:gravity="center_vertical"
     android:orientation="vertical" >
 
+    <ImageButton
+        android:id="@+id/camera"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dip"
+        android:adjustViewBounds="true"
+        android:gravity="center_horizontal"
+        android:scaleType="fitCenter"
+        android:src="@drawable/camera" />
+
     <TextView
         android:id="@+id/time"
         android:layout_width="match_parent"

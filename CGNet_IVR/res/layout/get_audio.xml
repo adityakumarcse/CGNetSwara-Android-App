@@ -2,8 +2,29 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical">
- 
+    android:orientation="vertical" >
+  
+    <Button
+		android:id="@+id/download_more"
+		style="?android:attr/buttonStyleSmall"
+        android:layout_height="wrap_content"
+    	android:layout_width="wrap_content"        
+        android:text="@string/download_more"
+        android:textSize="20sp"
+        android:background="@drawable/button_red" 
+        android:layout_marginBottom="10dip"
+        android:layout_marginTop="10dip" 
+        android:layout_gravity="center_horizontal"
+    	android:padding="10dip" />
+	
+	<ProgressBar
+        android:id="@+id/progressbar"
+        style="?android:attr/progressBarStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical|center_horizontal"
+        android:visibility="visible" />
+    
     <ListView
         android:id="@+id/list"
         android:layout_width="fill_parent"

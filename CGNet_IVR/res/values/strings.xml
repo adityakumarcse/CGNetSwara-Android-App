@@ -15,4 +15,6 @@
     <string name="playback">Playback</string>
     <string name="send">Send Audio</string>
     
+    <string name="download_more">Download More</string>
+    
 </resources>

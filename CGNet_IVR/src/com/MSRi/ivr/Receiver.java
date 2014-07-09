@@ -33,8 +33,7 @@ public class Receiver extends BroadcastReceiver {
         if (cm == null)
             return;
        
-        if ((cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnected()) 
-        	|| intent.getAction().equals("com.android.CUSTOM_INTENT")) {
+        if (cm.getActiveNetworkInfo() != null || intent.getAction().equals("com.android.CUSTOM_INTENT")) {
         	File dir = new File(mMainDir + mInnerDir); // Contains files to be sent
         	File[] directoryListing = dir.listFiles();
         	
