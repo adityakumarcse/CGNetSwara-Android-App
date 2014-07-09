@@ -47,8 +47,7 @@ public class RecordAudio extends Activity {
 	 *  an audio file. */
 	private MediaPlayer mCGNetAudio;
 	
-	/** Starts recording audio. 
-	 *  TODO: Replace this button with an @ the beep mark. */
+	/** Starts recording audio.  */
 	private Button mStart;
 	
 	/** Stops recording audio. */
@@ -180,8 +179,7 @@ public class RecordAudio extends Activity {
 					  + "_" + c.get(Calendar.DAY_OF_MONTH);
 		String time = c.get(Calendar.HOUR_OF_DAY) + "_" 
 					  + c.get(Calendar.MINUTE) + "_" + c.get(Calendar.SECOND);
-		
-		// TODO: Make sure paths are right 
+		 
 		mUniqueAudioRecording = "/" + date + "__" + time + ".wav";
 	}
 
@@ -206,7 +204,12 @@ public class RecordAudio extends Activity {
 	@Override
 	public void onPause() {
 		super.onPause();
-		
+		// If the user pauses the app when they're recording a message 
+		// we're going to treat it like they paused the recording before 
+		// pausing the app
+		if(mStop.isEnabled()) { 
+			mStop.performClick(); 
+		} 
 		stopPlayingAudio(mCGNetAudio);
 		stopPlayingAudio(mUserAudio);
 		
@@ -220,9 +223,12 @@ public class RecordAudio extends Activity {
 	 *  for the user. */
 	@Override
 	public void onResume() {
-		super.onResume();    
-		mCGNetAudio = MediaPlayer.create(this, R.raw.mistake_0_beep_start_finish_1);
-		mCGNetAudio.start(); 
+		super.onResume();
+		// Audio should only play when the user hasn't recorded audio already 
+		if (mStop.isEnabled()) {
+			mCGNetAudio = MediaPlayer.create(this, R.raw.mistake_0_beep_start_finish_1);
+			mCGNetAudio.start(); 
+		}
 	}
 
 	/** Creates an audio recording using the phone mic as the audio source. */

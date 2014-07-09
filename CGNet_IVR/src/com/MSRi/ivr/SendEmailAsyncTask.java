@@ -61,7 +61,8 @@ class SendEmailAsyncTask extends AsyncTask <Void, Void, Boolean> {
         TelephonyManager tMgr = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
         String mPhoneNumber = tMgr.getLine1Number(); //TODO is this right?
         
-        TelephonyManager.getDeviceId()
+       // String id = TelephonyManager.getDeviceId();
+        
         
         String body = "Email sent from phone number: " + mPhoneNumber;
         mMail.setBody(body);
