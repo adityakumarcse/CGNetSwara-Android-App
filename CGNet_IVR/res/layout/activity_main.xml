@@ -42,7 +42,7 @@
 	        android:textSize="20sp"
 	        android:layout_margin="5dip"
 	        android:background="@drawable/button_red"
-	        android:text="@string/one" />
+	        android:text="@string/one_record" />
 
     </LinearLayout>
 

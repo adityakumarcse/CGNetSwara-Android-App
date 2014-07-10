@@ -1,17 +1,14 @@
 package com.MSRi.ivr;
 
 import java.io.File;  
-
 import android.util.Log;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Menu;
 import android.view.View; 
-
 import java.util.Calendar;
 import java.io.IOException;  
-
 import android.app.Activity; 
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -30,8 +27,6 @@ import android.view.View.OnClickListener;
  *  They can then chose to send the recording off to a central location. 
  *  The user is able to listen to the recording prior to sending the off.  
  *   
- *  TODO : Add start @ the beep & allow repeated listens to audio recording
- *  
  *  @author Krittika D'Silva (krittika.dsilva@gmail.com) */
 public class RecordAudio extends Activity {
 	private static final String TAG = "RecordAudio";
@@ -83,6 +78,7 @@ public class RecordAudio extends Activity {
 
 	/** Saves logs about the user */
     private SaveUserLogs mUserLogs;
+     
     
 	/** Called when the activity is first created. */
 	@Override
@@ -103,14 +99,15 @@ public class RecordAudio extends Activity {
 		mPlayback.setEnabled(false);
 		mSendAudio.setEnabled(false);
 		mCamera.setVisibility(View.INVISIBLE);
-		
+		 
 		// Create folders for the audio files 
 		setupDirectory();
 	
 		mBack.setOnClickListener(new OnClickListener() { 
 			@Override
 			public void onClick(View arg) { 		
-				stopPlayingAudio(mCGNetAudio); // TODO: Stop recording too?
+				stopPlayingAudio(mCGNetAudio);
+				stopRecording();
 		    	Intent intent = new Intent(RecordAudio.this, MainActivity.class);
 		    	startActivity(intent); 
 			}  
@@ -119,7 +116,7 @@ public class RecordAudio extends Activity {
 
 		mStop.setOnClickListener(new OnClickListener() { 
 			@Override
-			public void onClick(View arg) {
+			public void onClick(View arg) { 
 				mStop.setEnabled(false); 
 				mPlayback.setEnabled(true);
 				mSendAudio.setEnabled(true);
@@ -132,11 +129,9 @@ public class RecordAudio extends Activity {
 
 		mPlayback.setOnClickListener(new OnClickListener() { 
 			@Override
-			public void onClick(View arg) {
+			public void onClick(View arg) { 
 				mStop.setEnabled(false);
-				mBack.setEnabled(false);
-				// TODO: Change this so that it's no disabled and 
-				// people can listen to their audio files more than once
+				mBack.setEnabled(false); 
 				mPlayback.setEnabled(false); 
 				mSendAudio.setEnabled(true);
 				
@@ -160,9 +155,10 @@ public class RecordAudio extends Activity {
 		mCamera.setOnClickListener(new OnClickListener() { 
 			@Override
 			public void onClick(View arg) { 
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
+				 
+                Intent intent = new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+          //      intent.setType("image/*");
+          //      intent.setAction(Intent.ACTION_GET_CONTENT);
                 startActivityForResult(Intent.createChooser(intent,
                         "Select Picture"), SELECT_PICTURE);
 			}
@@ -184,7 +180,7 @@ public class RecordAudio extends Activity {
 	    Runnable runnable = new Runnable() {
 	    	@Override
 	    	public void run() {  
-	    		mStop.setVisibility(View.VISIBLE);	
+	    		mStop.setEnabled(true);	
 	    		stopPlayingAudio(mCGNetAudio); 
 	    		startRecording(); 
 	    	}
@@ -197,10 +193,14 @@ public class RecordAudio extends Activity {
 	
 	
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		Log.e(TAG, "Photo selected");
+		Toast.makeText(RecordAudio.this,"You have selected an image.", 
+                Toast.LENGTH_SHORT).show();
         if (resultCode == RESULT_OK) {
             if (requestCode == SELECT_PICTURE) {
                 Uri selectedImageUri = data.getData();
                 String selectedImagePath = getPath(selectedImageUri);	// TODO: This path is important
+                Log.e(TAG, "" + selectedImagePath);
             }
         }
     }
@@ -288,7 +288,7 @@ public class RecordAudio extends Activity {
 		// If the user pauses the app when they're recording a message 
 		// we're going to treat it like they paused the recording before 
 		// pausing the app
-		if(mStop.isEnabled()) { 
+		if(!mStop.isEnabled()) { 
 			timer.cancel(); 
 			stopRecording(); 
 		} 
@@ -307,7 +307,7 @@ public class RecordAudio extends Activity {
 	public void onResume() {
 		super.onResume();
 		// Audio should only play when the user hasn't recorded audio already 
-		if (mBack.isEnabled()) {
+		if (mBack.isEnabled() && !mPlayback.isEnabled()) {
 			mCGNetAudio = MediaPlayer.create(this, R.raw.record_message);
 			mCGNetAudio.start(); 
 		}
@@ -341,6 +341,13 @@ public class RecordAudio extends Activity {
 			mUserAudio.setDataSource(mMainDir + mInnerDir + mUniqueAudioRecording);
 			mUserAudio.prepare();
 			mUserAudio.start();
+			
+			mUserAudio.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+			    public void onCompletion(MediaPlayer mp) { 
+			    	mPlayback.setEnabled(true);
+			    }
+			});
+			
 		} catch (IOException e) {
 			Log.e(TAG, "StartPlaying() : prepare() failed");
 		}		

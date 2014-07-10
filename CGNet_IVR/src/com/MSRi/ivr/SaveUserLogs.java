@@ -28,8 +28,7 @@ public class SaveUserLogs {
 			e.printStackTrace();
 		}
 
-	}
-	
+	} 
 //	FileOutputStream fOut = openFileOutput("savedData.txt",  MODE_APPEND);
 	
 	
