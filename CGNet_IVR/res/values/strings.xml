@@ -7,16 +7,17 @@
     <string name="main_title">CGNet Swara</string>
     <string name="begin">Begin</string> 
     
-    <string name="zero">0 (Back)</string>
-    <string name="one">1 (Stop)</string>
+    <string name="zero">0 (बैक)</string>
+    <string name="one">1 (रोक)</string>
     <string name="two">2</string>
     <string name="three">3</string>
-    <string name="one_record">1 (Record)</string>
+    <string name="one_record">1 (रिकॉर्ड)</string>
     
-    
-    <string name="playback">Playback</string>
-    <string name="send">Send Audio</string>
-    
+    <string name="attach_photo">एक तस्वीर देते हैं </string>
+    <string name="playback">सुनना</string>
+    <string name="send">भेजें</string>
+    <string name="your_number">आपका फोन नंबर  </string>
+   
     <string name="download_more">Download More</string>
     
 </resources>

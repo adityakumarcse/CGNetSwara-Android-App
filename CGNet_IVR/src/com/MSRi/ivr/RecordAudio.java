@@ -9,8 +9,7 @@ import android.view.Menu;
 import android.view.View; 
 import java.util.Calendar;
 import java.io.IOException;  
-import android.app.Activity; 
-import android.widget.ImageButton;
+import android.app.Activity;  
 import android.widget.Toast;
 import android.widget.Button; 
 import android.content.Intent;
@@ -64,7 +63,7 @@ public class RecordAudio extends Activity {
 	 *  known folder - to be sent later. */
 	private Button mSendAudio;
 	
-	private ImageButton mCamera;
+	private Button mCamera;
 	
 	/** Displays the amount of time left - each recording can be 3 mins max */
 	private TextView mCountdown;
@@ -91,14 +90,14 @@ public class RecordAudio extends Activity {
 		mPlayback = (Button) findViewById(R.id.playback);
 		mSendAudio = (Button) findViewById(R.id.sendAudio);
 		mCountdown = (TextView) findViewById(R.id.time); 
-		mCamera = (ImageButton) findViewById(R.id.camera);
+		mCamera = (Button) findViewById(R.id.camera);
 		
 		// At first, the only option the user has is to record audio
 		mBack.setEnabled(true);
 		mStop.setEnabled(false);
 		mPlayback.setEnabled(false);
 		mSendAudio.setEnabled(false);
-		mCamera.setVisibility(View.INVISIBLE);
+		mCamera.setEnabled(false);
 		 
 		// Create folders for the audio files 
 		setupDirectory();
@@ -120,7 +119,7 @@ public class RecordAudio extends Activity {
 				mStop.setEnabled(false); 
 				mPlayback.setEnabled(true);
 				mSendAudio.setEnabled(true);
-				mCamera.setVisibility(View.VISIBLE);
+				mCamera.setEnabled(true);
 				timer.cancel();
 				stopPlayingAudio(mCGNetAudio);  
 				stopRecording();
@@ -157,8 +156,6 @@ public class RecordAudio extends Activity {
 			public void onClick(View arg) { 
 				 
                 Intent intent = new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-          //      intent.setType("image/*");
-          //      intent.setAction(Intent.ACTION_GET_CONTENT);
                 startActivityForResult(Intent.createChooser(intent,
                         "Select Picture"), SELECT_PICTURE);
 			}
@@ -169,7 +166,7 @@ public class RecordAudio extends Activity {
 	        public void onTick(long millis) {
 	            int seconds = (int) (millis / 1000) % 60 ;
 	            int minutes = (int) ((millis / (1000*60)) % 60); 
-	            String text = String.format("%02d minutes and %02d seconds remaining", minutes, seconds);
+	            String text = String.format("%2d minutes and %02d seconds remaining", minutes, seconds);
 	            mCountdown.setText(text);
 	        }
 	        public void onFinish() {
@@ -194,10 +191,11 @@ public class RecordAudio extends Activity {
 	
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		Log.e(TAG, "Photo selected");
-		Toast.makeText(RecordAudio.this,"You have selected an image.", 
-                Toast.LENGTH_SHORT).show();
+		
         if (resultCode == RESULT_OK) {
             if (requestCode == SELECT_PICTURE) {
+            	Toast.makeText(RecordAudio.this,"You have selected an image.", 
+                        Toast.LENGTH_SHORT).show();
                 Uri selectedImageUri = data.getData();
                 String selectedImagePath = getPath(selectedImageUri);	// TODO: This path is important
                 Log.e(TAG, "" + selectedImagePath);
