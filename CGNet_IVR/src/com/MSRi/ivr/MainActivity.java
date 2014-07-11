@@ -156,8 +156,7 @@ public class MainActivity extends Activity {
 		SharedPreferences prefs = getPreferences(MODE_PRIVATE); 
 		String restoredText = prefs.getString("Phone", null);
 
-		if (restoredText != null) {
-			Log.e(TAG, "In here - saved woooho!!");
+		if (restoredText != null) { 
 	    	Intent intent = new Intent(this, RecordAudio.class);
 	    	startActivity(intent);
 		} else { 

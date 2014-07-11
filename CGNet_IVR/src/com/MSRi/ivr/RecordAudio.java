@@ -189,9 +189,7 @@ public class RecordAudio extends Activity {
 
 	
 	
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		Log.e(TAG, "Photo selected");
-		
+	public void onActivityResult(int requestCode, int resultCode, Intent data) { 
         if (resultCode == RESULT_OK) {
             if (requestCode == SELECT_PICTURE) {
             	Toast.makeText(RecordAudio.this,"You have selected an image.", 
@@ -265,7 +263,8 @@ public class RecordAudio extends Activity {
 	/** Releases resources back to the system.  */
 	private void stopPlayingAudio(MediaPlayer mp) {
 		if(mp != null) {
-			mp.release();   
+			mp.stop();
+			mp.reset();   
 			mp = null;	
 		}
 	}
@@ -273,7 +272,8 @@ public class RecordAudio extends Activity {
     /** Releases resources back to the system.  */
 	private void stopRecording() {   
 		if (mRecorder != null) { 
-			mRecorder.release();
+			
+			mRecorder.reset();
 			mRecorder = null;
 		} 
 	}
@@ -283,6 +283,7 @@ public class RecordAudio extends Activity {
 	@Override
 	public void onPause() {
 		super.onPause();
+		
 		// If the user pauses the app when they're recording a message 
 		// we're going to treat it like they paused the recording before 
 		// pausing the app
@@ -292,9 +293,9 @@ public class RecordAudio extends Activity {
 		} 
 		stopPlayingAudio(mCGNetAudio);
 		stopPlayingAudio(mUserAudio);
-		
+ 
 		if (mRecorder != null) {
-			mRecorder.release();
+			mRecorder.reset(); 
 			mRecorder = null;
 		}
  	}
@@ -304,6 +305,11 @@ public class RecordAudio extends Activity {
 	@Override
 	public void onResume() {
 		super.onResume();
+		
+		if(mRecorder != null) {
+			mRecorder = null;
+		}
+		
 		// Audio should only play when the user hasn't recorded audio already 
 		if (mBack.isEnabled() && !mPlayback.isEnabled()) {
 			mCGNetAudio = MediaPlayer.create(this, R.raw.record_message);
@@ -314,13 +320,13 @@ public class RecordAudio extends Activity {
 	/** Creates an audio recording using the phone mic as the audio source. */
 	private void startRecording() { 
 		timer.start(); 
-		 
+		  
 		mRecorder = new MediaRecorder();
 		mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
 		mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
 		mRecorder.setOutputFile(mMainDir + mInnerDir + mUniqueAudioRecording); 
 		mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-		
+		 
 		Log.e(TAG, "1. Create file: " + mMainDir + mInnerDir + mUniqueAudioRecording);
 		
 		try {
@@ -328,7 +334,9 @@ public class RecordAudio extends Activity {
 			mRecorder.start();
 		} catch (IOException e) { 
 			Log.e(TAG, "StartRecording() : prepare() failed");
-		} 
+		} catch (Exception e) { 
+			Log.e("TAG", e.toString());
+		}
 	}
 
 	/** Plays the generated audio recording. */
@@ -348,7 +356,9 @@ public class RecordAudio extends Activity {
 			
 		} catch (IOException e) {
 			Log.e(TAG, "StartPlaying() : prepare() failed");
-		}		
+		} catch (Exception e) { 
+			Log.e(TAG, e.toString());
+		}
 	}
  
     /** Inflates the menu. Currently, there aren't any meaningful items
