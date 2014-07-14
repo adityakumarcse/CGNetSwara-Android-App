@@ -195,8 +195,10 @@ public class RecordAudio extends Activity {
             	Toast.makeText(RecordAudio.this,"You have selected an image.", 
                         Toast.LENGTH_SHORT).show();
                 Uri selectedImageUri = data.getData();
-                String selectedImagePath = getPath(selectedImageUri);	// TODO: This path is important
-                Log.e(TAG, "" + selectedImagePath);
+                
+                String selectedImagePath = getPath(selectedImageUri);	
+                
+                mUserLogs.setPhotoPat(selectedImagePath); 
             }
         }
     }
@@ -206,8 +208,7 @@ public class RecordAudio extends Activity {
      */
     public String getPath(Uri uri) {
             // just some safety built in 
-            if( uri == null ) {
-                // TODO perform some logging or show user feedback
+            if( uri == null ) { 
                 return null;
             }
             // try to retrieve the image from the media store first
@@ -223,12 +224,7 @@ public class RecordAudio extends Activity {
             // this is our fallback here
             return uri.getPath();
     }
-
-	
-	
-	
-	
-	
+ 
 	/** Sets up file structure for audio recordings. **/
 	private void setupDirectory() {
 		// This folder should have been created in MainActivity
@@ -255,6 +251,7 @@ public class RecordAudio extends Activity {
 					  + c.get(Calendar.MINUTE) + "_" + c.get(Calendar.SECOND);
 		 
 		mUniqueAudioRecording = "/" + date + "__" + time;
+		 
 		mUserLogs = new SaveUserLogs(mMainDir, mUniqueAudioRecording);
 		
 		mUniqueAudioRecording += ".wav"; 
@@ -369,11 +366,12 @@ public class RecordAudio extends Activity {
         return true;
     }
      
-	/** Sends the audio file to a central location */
+	/** Sends the audio file to a central location 
+	 *  TODO: I don't think this is working  */
 	private void sendData() { 
 		Log.e(TAG, "2. Sending Data: Should iterate through files in the dir now");
 		Intent intent = new Intent(); 
 		intent.setAction("com.android.CUSTOM_INTENT");
-		sendBroadcast(intent); // TODO: I don't think this is working 
+		sendBroadcast(intent);  
 	} 
 }

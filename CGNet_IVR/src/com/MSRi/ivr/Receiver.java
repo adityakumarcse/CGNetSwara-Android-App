@@ -26,8 +26,10 @@ public class Receiver extends BroadcastReceiver {
 	 * that need to be sent and sends each one if there's Internet. */ 
     @Override
     public void onReceive(Context context, Intent intent) {
+    	
     	Log.e(TAG,  "3. In onRecieve");
-		mMainDir = Environment.getExternalStorageDirectory().getAbsolutePath();
+		
+    	mMainDir = Environment.getExternalStorageDirectory().getAbsolutePath();
 		mMainDir += "/CGNetSwara"; 
     	ConnectivityManager cm = ((ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE));
         if (cm == null)
