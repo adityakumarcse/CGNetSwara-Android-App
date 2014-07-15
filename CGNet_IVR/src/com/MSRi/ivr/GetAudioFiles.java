@@ -1,17 +1,27 @@
 package com.MSRi.ivr;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.Calendar;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 import android.app.Activity; 
 
 public class GetAudioFiles extends Activity {
@@ -23,26 +33,32 @@ public class GetAudioFiles extends Activity {
 	/** Starts recording audio.  */
 	private Button mDownloadMore;
 	
-	private String mDropboxURL = "https://www.dropbox.com/sh/f88nptylz1jjbem/AACWoQays-JWm_BSKIuVNAHoa";
-	
+	/** */
+	ProgressBar progressBar;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.get_audio); 
-        
+		progressBar = (ProgressBar) findViewById(R.id.progressbar);
+		progressBar.setProgress(0);
+		progressBar.setVisibility(View.VISIBLE);
+		progressBar.setIndeterminate(false);
+
+		
         mDownloadMore = (Button) findViewById(R.id.download_more);
         
 		// Create folders for the audio files 
-		//setupDirectory();
+		setupDirectory();
         
-		// Check
+		// 
         populateListView();
-        
+      //  progressBar.setProgress(100);
         mDownloadMore.setOnClickListener(new OnClickListener() { 
 			@Override
 			public void onClick(View arg) { 		
 				downloadFiles();
+				Log.e(TAG, "CLICKED!");
 			}  
 		}); 
         
@@ -67,37 +83,10 @@ public class GetAudioFiles extends Activity {
     	
 	}
     
-    
+
+	
     private void downloadFiles() { 
-    	//HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-    	
-    	
-    	
-    	
-/*        
-    	if(ISSUE_DOWNLOAD_STATUS.intValue()==ECMConstant.ECM_DOWNLOADING){
-            File file=new File(DESTINATION_PATH);
-            if(file.exists()){
-                 downloaded = (int) file.length();
-                 connection.setRequestProperty("Range", "bytes="+(file.length())+"-");
-            }
-        } else{
-            connection.setRequestProperty("Range", "bytes=" + downloaded + "-");
-        }
-        connection.setDoInput(true);
-        connection.setDoOutput(true);
-        progressBar.setMax(connection.getContentLength());
-         in = new BufferedInputStream(connection.getInputStream());
-         fos=(downloaded==0)? new FileOutputStream(DESTINATION_PATH): new FileOutputStream(DESTINATION_PATH,true);
-         bout = new BufferedOutputStream(fos, 1024);
-        byte[] data = new byte[1024];
-        int x = 0;
-        while ((x = in.read(data, 0, 1024)) >= 0) {
-            bout.write(data, 0, x);
-             downloaded += x;
-             progressBar.setProgress(downloaded);
-        } */
-    	
+    	new DownloadAudioFile().execute(); 
     }
 
 
@@ -107,5 +96,73 @@ public class GetAudioFiles extends Activity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
-    }    
+    }   
+    
+    
+    
+    public class DownloadAudioFile extends AsyncTask<Void, Integer, Void> {
+    	private static final String TAG = "DownloadAudioFile";
+    	 
+        protected Void doInBackground(Void... urls) {
+        	 
+        	String mMainDir = Environment.getExternalStorageDirectory().getAbsolutePath();
+    		mMainDir += "/CGNetSwaraDownloads";
+        	String path = mMainDir + "/test1.wav";
+        	int count = 0;
+        	 
+         	Log.e(TAG,"?");
+    		URL url;
+    		try {
+    			url = new URL("http://cgnetswara.org/sounds/270.wav");
+    			
+    	    	
+    		  	HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+    	       	int downloaded = 0;
+    			if(true){
+    	            File file=new File(path);
+    	            if(!file.exists()) {
+    	            	file.createNewFile();
+    	            } 
+    	            if(file.exists()){ 
+    	                downloaded = (int) file.length(); 
+    	                connection.setRequestProperty("Range", "bytes="+(file.length())+"-");
+    	            }
+    	        } //else{
+    	           // connection.setRequestProperty("Range", "bytes=" + downloaded + "-");
+    	        //}
+    	        connection.setDoInput(true);
+    	        connection.setDoOutput(true);
+    	        progressBar.setMax(connection.getContentLength()); 
+    			 
+    			BufferedInputStream in = new BufferedInputStream(connection.getInputStream());
+    	        FileOutputStream fos = (downloaded==0)? new FileOutputStream(path): new FileOutputStream(path,true);
+    	        BufferedOutputStream bout = new BufferedOutputStream(fos, 1024);
+    	        byte[] data = new byte[1024];
+    	        int x = 0;
+
+    	        while ((x = in.read(data, 0, 1024)) >= 0) { 
+    	            bout.write(data, 0, x);
+    	            downloaded += x;   
+    	            publishProgress(downloaded);
+    	        }
+    	        bout.close();
+    		} catch(Exception e) { 
+    			e.printStackTrace();
+    		}
+    		
+    		return null; 
+        }
+        
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+        	final ProgressBar bar = progressBar;
+        	final int size = values[0];
+			runOnUiThread(new Runnable() {    
+				@Override
+				public void run() { 
+					bar.setProgress(size);  
+				} 
+			});  
+        }  
+    }  
 }

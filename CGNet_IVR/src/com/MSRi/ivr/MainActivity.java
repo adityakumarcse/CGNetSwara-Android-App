@@ -46,7 +46,7 @@ public class MainActivity extends Activity {
 	private Button mOne;
 	
 	/** Opens an activity that allows a user to listen to recordings. */
-	//private Button mTwo;
+	private Button mTwo;
 	
 	private String mPhoneNumber;
 	
@@ -59,7 +59,7 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         
         mOne = (Button) findViewById(R.id.one);
-      //  mTwo = (Button) findViewById(R.id.two);
+        mTwo = (Button) findViewById(R.id.two);
         mNumber = (EditText) findViewById(R.id.phone);
         
         String savedText = getPreferences(MODE_PRIVATE).getString("Phone", null); 
@@ -83,14 +83,14 @@ public class MainActivity extends Activity {
  			}  
         }); 
         
- /*       mTwo.setOnClickListener(new OnClickListener() {
+        mTwo.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg) {
 				stopPlayingAudio(mCGNetAudio); 
 				mTimer.cancel();
 				loadRecordings();
 			}  
-        }); */
+        }); 
         
         // Creates a folder for the app's recordings
         String path = Environment.getExternalStorageDirectory().getAbsolutePath();
@@ -206,10 +206,10 @@ public class MainActivity extends Activity {
     
     /** Opens a new activity to allow the user to view and listen to 
      *  recordings. */
-/*    private void loadRecordings() { 
+    private void loadRecordings() { 
     	Intent intent = new Intent(this, GetAudioFiles.class);
     	startActivity(intent);
-    } */
+    } 
 
     /** Inflates the menu. Currently, there aren't any meaningful items
      *  to add to the action bar. */

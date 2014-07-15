@@ -37,6 +37,16 @@
 	        android:background="@drawable/button_red"
 	        android:text="@string/one_record" />
 
+	    <Button
+	        android:id="@+id/two"
+	        style="?android:attr/buttonStyleSmall"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_margin="5dip"
+	        android:layout_weight="1"
+	        android:textSize="20sp"
+	        android:background="@drawable/button_red"
+	        android:text="@string/two" />
     </LinearLayout>
     
 	<LinearLayout 
