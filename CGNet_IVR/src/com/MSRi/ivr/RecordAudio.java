@@ -78,6 +78,7 @@ public class RecordAudio extends Activity {
 	/** Saves logs about the user */
     private SaveUserLogs mUserLogs;
      
+    private boolean mFileToBeSent;
     
 	/** Called when the activity is first created. */
 	@Override
@@ -99,6 +100,9 @@ public class RecordAudio extends Activity {
 		mSendAudio.setEnabled(false);
 		mCamera.setEnabled(false);
 		 
+		
+		mFileToBeSent = false;
+		
 		// Create folders for the audio files 
 		setupDirectory();
 	
@@ -369,9 +373,21 @@ public class RecordAudio extends Activity {
 	/** Sends the audio file to a central location 
 	 *  TODO: I don't think this is working  */
 	private void sendData() { 
+		mFileToBeSent = true;
 		Log.e(TAG, "2. Sending Data: Should iterate through files in the dir now");
 		Intent intent = new Intent(); 
 		intent.setAction("com.android.CUSTOM_INTENT");
 		sendBroadcast(intent);  
 	} 
+	
+	@Override
+	public void onDestroy() {
+	    super.onDestroy();
+	    if(!mFileToBeSent) {
+	    	Log.e(TAG, "Deleting file: " + mMainDir + mInnerDir + mUniqueAudioRecording);
+	    	File file = new File(mMainDir + mInnerDir + mUniqueAudioRecording);
+	    	file.delete();
+	    }
+	}
+	
 }
