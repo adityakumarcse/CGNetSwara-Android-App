@@ -1,29 +1,22 @@
 package com.MSRi.ivr;
 
-import java.io.File;
-import java.util.Timer;
-
-import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
+import java.io.File;  
 import android.util.Log;
-import android.view.LayoutInflater;
+import android.os.Bundle;
 import android.view.Menu;
-import android.view.View;
-import android.view.WindowManager;
-
-import java.util.TimerTask; 
-
+import android.view.View;  
 import android.app.Activity;
-import android.app.AlertDialog;
+import android.text.Editable;
 import android.widget.Button;
-import android.widget.EditText;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.Environment; 
-import android.media.MediaPlayer;
-import android.media.AudioManager;
+import android.os.Environment;
+import android.app.AlertDialog;
+import android.widget.EditText;
+import android.text.TextWatcher;
+import android.view.WindowManager;
+import android.view.LayoutInflater;
+import android.content.DialogInterface;
+import android.content.SharedPreferences;  
 import android.view.View.OnClickListener;
 
 /** This is the first screen of the CGNet Swara App. 
@@ -39,13 +32,14 @@ public class MainActivity extends Activity {
 	/** Opens an activity that allows a user to listen to recordings. */
 	private Button mListenMessages;
 	 
-	/** */
+	/** Opens an activity that allows the user to attach a photo, record a message, 
+	 *  and send both. */
 	private Button mIncludeAudio;
 	
-	/** */	
+	/** The users' phone number. */	
 	private String mPhoneNumber;
 	
-	/** */
+	/** The users' phone number. */
 	private EditText mNumber;
 	
 	/** Called when the activity is first created. */
@@ -57,7 +51,6 @@ public class MainActivity extends Activity {
         mRecordMessage = (Button) findViewById(R.id.one);
         mListenMessages = (Button) findViewById(R.id.two);
         mIncludeAudio = (Button) findViewById(R.id.photo);
-        
         mNumber = (EditText) findViewById(R.id.phone);
         
         String savedText = getPreferences(MODE_PRIVATE).getString("Phone", null); 
@@ -94,7 +87,7 @@ public class MainActivity extends Activity {
             dir.mkdirs();
         }
         
-        
+        // Saves the users phone number
         mNumber.addTextChangedListener(new TextWatcher(){
             public void afterTextChanged(Editable s) {
             	mPhoneNumber = s.toString(); 

@@ -37,7 +37,8 @@ public final class R {
         public static final int user=0x7f02000d;
     }
     public static final class id {
-        public static final int action_settings=0x7f090014;
+        public static final int action_settings=0x7f090015;
+        public static final int backToMain=0x7f090014;
         public static final int download_more=0x7f090006;
         public static final int editTextDialogUserInput=0x7f09000a;
         public static final int icon=0x7f09000b;
@@ -79,8 +80,9 @@ public final class R {
     public static final class string {
         public static final int action_settings=0x7f060001;
         public static final int app_name=0x7f060000;
+        public static final int back=0x7f06000d;
         public static final int begin=0x7f060004;
-        public static final int download_more=0x7f06000e;
+        public static final int download_more=0x7f06000f;
         public static final int hello_world=0x7f060002;
         public static final int include_image=0x7f060009;
         public static final int listen=0x7f06000a;
@@ -90,7 +92,7 @@ public final class R {
         public static final int record=0x7f060008;
         public static final int send=0x7f06000c;
         public static final int three=0x7f060007;
-        public static final int your_number=0x7f06000d;
+        public static final int your_number=0x7f06000e;
         public static final int zero=0x7f060005;
     }
     public static final class style {

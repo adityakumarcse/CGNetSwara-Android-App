@@ -1,17 +1,13 @@
 package com.MSRi.ivr;
 
 import java.io.File;  
-
 import android.util.Log;
 import android.net.Uri;
-import android.os.Bundle;
-import android.os.Handler;
+import android.os.Bundle; 
 import android.view.Menu;
 import android.view.View; 
-
 import java.util.Calendar;
 import java.io.IOException;  
-
 import android.app.Activity;  
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -19,13 +15,13 @@ import android.widget.Button;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Environment;
 import android.widget.TextView;  
 import android.media.MediaPlayer;
 import android.os.CountDownTimer; 
 import android.provider.MediaStore;
-import android.media.MediaRecorder; 
+import android.media.MediaRecorder;
+import android.graphics.BitmapFactory; 
 import android.view.View.OnClickListener; 
 
 /** This screen allows the user to record an audio message.
@@ -59,6 +55,8 @@ public class RecordAudio extends Activity {
 	
 	/** Plays back the audio that the user recorded. */
 	private Button mPlayback;
+	
+	private Button mBack;
 	
 	/** Sends audio recording to a central location if there's an Internet 
 	 *  connection, if not saves the audio recording in a 
@@ -94,16 +92,17 @@ public class RecordAudio extends Activity {
 		mSendAudio = (Button) findViewById(R.id.sendAudio);
 		mCountdown = (TextView) findViewById(R.id.time); 
 		mUserImage = (ImageView) findViewById(R.id.userImage);
-		
+		mBack = (Button) findViewById(R.id.backToMain);
 		
 		mFileToBeSent = false;
 		
 		// At first, the only option the user has is to record audio
 		mStart.setVisibility(View.VISIBLE); 
-		mStop.setVisibility(View.INVISIBLE);
-		mPlayback.setVisibility(View.INVISIBLE);
-		mSendAudio.setVisibility(View.INVISIBLE); 
-		 
+		mStop.setVisibility(View.GONE);
+		mPlayback.setVisibility(View.GONE);
+		mSendAudio.setVisibility(View.GONE); 
+		mBack.setVisibility(View.GONE);
+		
 		Intent intent = getIntent();
 		Bundle extras = intent.getExtras(); 
 		boolean includePhoto = extras.getBoolean("photo"); 
@@ -121,7 +120,7 @@ public class RecordAudio extends Activity {
 			@Override
 			public void onClick(View arg) { 	 
 				stopRecording();
-	    		mStart.setVisibility(View.INVISIBLE);
+	    		mStart.setVisibility(View.GONE);
 				mStop.setVisibility(View.VISIBLE);	  
 	    		startRecording(); 
 			}  
@@ -130,9 +129,10 @@ public class RecordAudio extends Activity {
 		mStop.setOnClickListener(new OnClickListener() { 
 			@Override
 			public void onClick(View arg) { 
-				mStop.setVisibility(View.INVISIBLE); 
+				mStop.setVisibility(View.GONE); 
 				mPlayback.setVisibility(View.VISIBLE);
 				mSendAudio.setVisibility(View.VISIBLE); 
+				mBack.setVisibility(View.VISIBLE);
 				timer.cancel();   
 				stopRecording();
 			}  
@@ -141,11 +141,10 @@ public class RecordAudio extends Activity {
 		mPlayback.setOnClickListener(new OnClickListener() { 
 			@Override
 			public void onClick(View arg) { 
-				mStop.setEnabled(false);
-				mStart.setEnabled(false); 
-				mPlayback.setEnabled(false); 
-				mSendAudio.setEnabled(true);
-				 
+				mStart.setVisibility(View.GONE);
+				mStop.setVisibility(View.GONE); 
+				mPlayback.setVisibility(View.GONE); 
+				mSendAudio.setVisibility(View.VISIBLE); 
 				startPlaying();
 			}
 		});
@@ -160,6 +159,15 @@ public class RecordAudio extends Activity {
 		    	startActivity(intent);
 			}
 		}); 
+		
+		mBack.setOnClickListener(new OnClickListener() { 
+			@Override
+			public void onClick(View arg) {   
+		    	Intent intent = new Intent(RecordAudio.this, MainActivity.class);
+		    	startActivity(intent);
+			}
+		}); 
+    	
 		
 		timer =  new CountDownTimer(3*60*1000, 1000) {
 	        public void onTick(long millis) {
@@ -182,12 +190,9 @@ public class RecordAudio extends Activity {
             	Toast.makeText(RecordAudio.this,"You have selected an image.", 
                         Toast.LENGTH_SHORT).show();
                 Uri selectedImageUri = data.getData();
-                String selectedImagePath = getPath(selectedImageUri);
-                
-                mUserLogs.setPhotoPath(selectedImagePath);
-                
-                Bitmap photo = BitmapFactory.decodeFile(selectedImagePath);
-                 
+                String selectedImagePath = getPath(selectedImageUri); 
+                mUserLogs.setPhotoPath(selectedImagePath); 
+                Bitmap photo = BitmapFactory.decodeFile(selectedImagePath); 
                 mUserImage.setImageBitmap(photo);
                  
             }
@@ -351,7 +356,7 @@ public class RecordAudio extends Activity {
     }
      
 	/** Sends the audio file to a central location 
-	 *  TODO: I don't think this is working  */
+	 *  TODO: I can't tell if this is working  */
 	private void sendData() { 
 		mFileToBeSent = true;
 		Log.e(TAG, "2. Sending Data: Should iterate through files in the dir now");

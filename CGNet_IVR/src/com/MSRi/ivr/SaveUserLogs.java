@@ -2,9 +2,11 @@ package com.MSRi.ivr;
 
 import java.io.File; 
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
  
+
 import android.util.Log;
 
 
@@ -28,15 +30,19 @@ public class SaveUserLogs {
 			dirInner.mkdir();
 		} 
 		
-		File file = new File(mainDir, mainDir + "/Logs" + audioRecordingPath + ".txt");
 		
-		
-	    try {
-	    	FileOutputStream fOut = new FileOutputStream(file);
-		    OutputStreamWriter myOutWriter = new OutputStreamWriter(fOut);
-	    	myOutWriter.append(audioRecordingPath);
-	    	 myOutWriter.close();
-	 	    fOut.close();
+		File root = new File(mainDir + "/Logs");
+		 
+	    try { 
+	    	if (!root.exists()) {
+	            root.mkdirs();
+	        }
+	        File gpxfile = new File(root, audioRecordingPath + ".txt");
+	        FileWriter writer = new FileWriter(gpxfile);
+	        writer.append(audioRecordingPath);
+	        writer.flush();
+	        writer.close();
+	         
 	 		   
 		} catch (IOException e) {
 			
