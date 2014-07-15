@@ -5,7 +5,7 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="10dip"  
+    android:padding="5dip"  
     android:layout_gravity="center_vertical"
     tools:context=".MainActivity" >
  
@@ -18,35 +18,45 @@
         android:adjustViewBounds="true" 
         android:scaleType="fitCenter" 
         android:src="@drawable/background_test" />
-    
      
-    
     <LinearLayout
         android:layout_width="fill_parent"
     	android:layout_height="wrap_content" 
-    	android:orientation="horizontal">
+    	android:orientation="vertical">
         
 	    <Button
 	        android:id="@+id/one"
 	        style="?android:attr/buttonStyleSmall"
-	        android:layout_width="wrap_content"
+	        android:layout_width="fill_parent"
 	        android:layout_height="wrap_content"
 	        android:layout_weight="1"
 	        android:textSize="20sp"
 	        android:layout_margin="5dip"
 	        android:background="@drawable/button_red"
-	        android:text="@string/one_record" />
-
+	        android:text="@string/record" />
+	    
+	  	<Button
+	        android:id="@+id/photo"
+	        style="?android:attr/buttonStyleSmall"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="1"
+	        android:textSize="20sp"
+	        android:layout_margin="5dip"
+	        android:background="@drawable/button_red"
+	        android:text="@string/include_image" />   
+	    
 	    <Button
 	        android:id="@+id/two"
 	        style="?android:attr/buttonStyleSmall"
-	        android:layout_width="wrap_content"
+	        android:layout_width="fill_parent"
 	        android:layout_height="wrap_content"
 	        android:layout_margin="5dip"
 	        android:layout_weight="1"
-	        android:textSize="20sp"
 	        android:background="@drawable/button_red"
-	        android:text="@string/two" />
+	        android:text="@string/listen"
+	        android:textSize="20sp" />
+
     </LinearLayout>
     
 	<LinearLayout 

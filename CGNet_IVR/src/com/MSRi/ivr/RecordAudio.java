@@ -44,11 +44,7 @@ public class RecordAudio extends Activity {
   	
 	/** Records the users audio recording. */
 	private MediaRecorder mRecorder;
-	
-	/** Plays CG Net Swara audio files instructor the user how to record 
-	 *  an audio file. */
-	private MediaPlayer mCGNetAudio;
-	
+	  
 	/** Starts recording audio.  */
 	private Button mBack;
 	
@@ -108,8 +104,7 @@ public class RecordAudio extends Activity {
 	
 		mBack.setOnClickListener(new OnClickListener() { 
 			@Override
-			public void onClick(View arg) { 		
-				stopPlayingAudio(mCGNetAudio);
+			public void onClick(View arg) { 	 
 				stopRecording();
 		    	Intent intent = new Intent(RecordAudio.this, MainActivity.class);
 		    	startActivity(intent); 
@@ -124,8 +119,7 @@ public class RecordAudio extends Activity {
 				mPlayback.setEnabled(true);
 				mSendAudio.setEnabled(true);
 				mCamera.setEnabled(true);
-				timer.cancel();
-				stopPlayingAudio(mCGNetAudio);  
+				timer.cancel();   
 				stopRecording();
 			}  
 		});
@@ -137,16 +131,14 @@ public class RecordAudio extends Activity {
 				mBack.setEnabled(false); 
 				mPlayback.setEnabled(false); 
 				mSendAudio.setEnabled(true);
-				
-				stopPlayingAudio(mCGNetAudio); 
+				 
 				startPlaying();
 			}
 		});
 
 		mSendAudio.setOnClickListener(new OnClickListener() { 
 			@Override
-			public void onClick(View arg) { 
-				stopPlayingAudio(mCGNetAudio);  // Audio really shouldn't be playing at this point
+			public void onClick(View arg) {  
 				sendData(); 
 				Toast.makeText(RecordAudio.this,"Your file has been sent.", 
 		                Toast.LENGTH_SHORT).show();
@@ -181,8 +173,7 @@ public class RecordAudio extends Activity {
 	    Runnable runnable = new Runnable() {
 	    	@Override
 	    	public void run() {  
-	    		mStop.setEnabled(true);	
-	    		stopPlayingAudio(mCGNetAudio); 
+	    		mStop.setEnabled(true);	  
 	    		startRecording(); 
 	    	}
 	    };
@@ -291,8 +282,7 @@ public class RecordAudio extends Activity {
 		if(!mStop.isEnabled()) { 
 			timer.cancel(); 
 			stopRecording(); 
-		} 
-		stopPlayingAudio(mCGNetAudio);
+		}  
 		stopPlayingAudio(mUserAudio);
  
 		if (mRecorder != null) {
@@ -309,13 +299,7 @@ public class RecordAudio extends Activity {
 		
 		if(mRecorder != null) {
 			mRecorder = null;
-		}
-		
-		// Audio should only play when the user hasn't recorded audio already 
-		if (mBack.isEnabled() && !mPlayback.isEnabled()) {
-			mCGNetAudio = MediaPlayer.create(this, R.raw.record_message);
-			mCGNetAudio.start(); 
-		}
+		} 
 	}
 
 	/** Creates an audio recording using the phone mic as the audio source. */
@@ -388,6 +372,5 @@ public class RecordAudio extends Activity {
 	    	File file = new File(mMainDir + mInnerDir + mUniqueAudioRecording);
 	    	file.delete();
 	    }
-	}
-	
+	} 
 }

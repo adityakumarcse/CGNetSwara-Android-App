@@ -8,15 +8,17 @@
     <string name="begin">Begin</string> 
     
     <string name="zero">0 (बैक)</string>
-    <string name="one">1 (रोक)</string>
-    <string name="two">2</string>
+    <string name="one">1 (रोक)</string> 
     <string name="three">3</string>
-    <string name="one_record">1 (रिकॉर्ड)</string>
+    
+    <string name="record">Record message</string>
+    <string name="include_image">Record + include image</string>
+    <string name="listen">Listen to messages</string>
     
     <string name="attach_photo">एक तस्वीर देते हैं </string>
     <string name="playback">सुनना</string>
     <string name="send">भेजें</string>
-    <string name="your_number">आपका फोन नंबर  </string>
+    <string name="your_number">Your phone number </string>
    
     <string name="download_more">Download More</string>
     

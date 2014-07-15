@@ -34,10 +34,13 @@ public class MainActivity extends Activity {
 	protected static final String TAG = "MainActivity";
 	  
 	/** Opens an activity that allows a user to record and send a message. */
-	private Button mOne;
+	private Button mRecordMessage;
 	
 	/** Opens an activity that allows a user to listen to recordings. */
-	private Button mTwo;
+	private Button mListenMessages;
+	 
+	private Button mIncludeAudio;
+	
 	
 	private String mPhoneNumber;
 	
@@ -49,8 +52,10 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
-        mOne = (Button) findViewById(R.id.one);
-        mTwo = (Button) findViewById(R.id.two);
+        mRecordMessage = (Button) findViewById(R.id.one);
+        mListenMessages = (Button) findViewById(R.id.two);
+        mIncludeAudio = (Button) findViewById(R.id.photo);
+        
         mNumber = (EditText) findViewById(R.id.phone);
         
         String savedText = getPreferences(MODE_PRIVATE).getString("Phone", null); 
@@ -58,14 +63,21 @@ public class MainActivity extends Activity {
 	    	mNumber.setText(savedText);
         }
  
-        mOne.setOnClickListener(new OnClickListener() { 
+        mRecordMessage.setOnClickListener(new OnClickListener() { 
 			@Override
 			public void onClick(View arg) { 
-				recordInput();
+				recordInput(false);
  			}  
         }); 
         
-        mTwo.setOnClickListener(new OnClickListener() {
+        mIncludeAudio.setOnClickListener(new OnClickListener() { 
+			@Override
+			public void onClick(View arg) { 
+				recordInput(true);
+ 			}  
+        }); 
+        
+        mListenMessages.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg) { 
 				loadRecordings();
@@ -92,14 +104,7 @@ public class MainActivity extends Activity {
             public void onTextChanged(CharSequence s, int start, int before, int count){}
         });
     }
-    
-    /** Releases resources back to the system.  */
-	private void stopPlayingAudio(MediaPlayer mp) {
-		if(mp != null) {
-			mp.release();   
-			mp = null;	
-		}
-	}
+     
 
 	/** Called when the activity is paused; begins playing the audio recording
 	 *  for the user. */
@@ -119,7 +124,7 @@ public class MainActivity extends Activity {
     }
     
     /** Opens a new activity to allow the user to record audio content. */
-    private void recordInput() {
+    private void recordInput(final boolean includePhoto) {
 		SharedPreferences prefs = getPreferences(MODE_PRIVATE); 
 		String restoredText = prefs.getString("Phone", null);
 
@@ -144,6 +149,7 @@ public class MainActivity extends Activity {
 				  new DialogInterface.OnClickListener() {
 				    public void onClick(DialogInterface dialog,int id) {
 				    	Intent intent = new Intent(MainActivity.this, RecordAudio.class);
+				    	intent.putExtra("photo", includePhoto); 
 				    	startActivity(intent);
 				    	mPhoneNumber = userInput.getText().toString();
 				    	SharedPreferences.Editor editor = getPreferences(MODE_PRIVATE).edit();
