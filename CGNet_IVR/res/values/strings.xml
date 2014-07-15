@@ -14,10 +14,9 @@
     <string name="record">Record message</string>
     <string name="include_image">Record + include image</string>
     <string name="listen">Listen to messages</string>
-    
-    <string name="attach_photo">एक तस्वीर देते हैं </string>
-    <string name="playback">सुनना</string>
-    <string name="send">भेजें</string>
+     
+    <string name="playback">Playback audio</string>
+    <string name="send">Send audio</string>
     <string name="your_number">Your phone number </string>
    
     <string name="download_more">Download More</string>

@@ -1,19 +1,25 @@
 package com.MSRi.ivr;
 
 import java.io.File;  
+
 import android.util.Log;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Menu;
 import android.view.View; 
+
 import java.util.Calendar;
 import java.io.IOException;  
+
 import android.app.Activity;  
+import android.widget.ImageView;
 import android.widget.Toast;
 import android.widget.Button; 
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Environment;
 import android.widget.TextView;  
 import android.media.MediaPlayer;
@@ -74,6 +80,8 @@ public class RecordAudio extends Activity {
      
     private boolean mFileToBeSent;
     
+    private ImageView mUserImage;
+    
 	/** Called when the activity is first created. */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -85,7 +93,9 @@ public class RecordAudio extends Activity {
 		mPlayback = (Button) findViewById(R.id.playback);
 		mSendAudio = (Button) findViewById(R.id.sendAudio);
 		mCountdown = (TextView) findViewById(R.id.time); 
-
+		mUserImage = (ImageView) findViewById(R.id.userImage);
+		
+		
 		mFileToBeSent = false;
 		
 		// At first, the only option the user has is to record audio
@@ -116,14 +126,13 @@ public class RecordAudio extends Activity {
 	    		startRecording(); 
 			}  
 		}); 
-
-
+ 
 		mStop.setOnClickListener(new OnClickListener() { 
 			@Override
 			public void onClick(View arg) { 
-				mStop.setEnabled(false); 
-				mPlayback.setEnabled(true);
-				mSendAudio.setEnabled(true); 
+				mStop.setVisibility(View.INVISIBLE); 
+				mPlayback.setVisibility(View.VISIBLE);
+				mSendAudio.setVisibility(View.VISIBLE); 
 				timer.cancel();   
 				stopRecording();
 			}  
@@ -173,10 +182,14 @@ public class RecordAudio extends Activity {
             	Toast.makeText(RecordAudio.this,"You have selected an image.", 
                         Toast.LENGTH_SHORT).show();
                 Uri selectedImageUri = data.getData();
+                String selectedImagePath = getPath(selectedImageUri);
                 
-                String selectedImagePath = getPath(selectedImageUri);	
+                mUserLogs.setPhotoPath(selectedImagePath);
                 
-                mUserLogs.setPhotoPat(selectedImagePath); 
+                Bitmap photo = BitmapFactory.decodeFile(selectedImagePath);
+                 
+                mUserImage.setImageBitmap(photo);
+                 
             }
         }
     }

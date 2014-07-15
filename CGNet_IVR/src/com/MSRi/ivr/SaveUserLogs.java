@@ -47,7 +47,7 @@ public class SaveUserLogs {
 	   
 	} 
 	
-	public void setPhotoPat(String path) { 
+	public void setPhotoPath(String path) { 
 //		FileOutputStream fOut = openFileOutput("savedData.txt",  MODE_APPEND);
 	// check both folders
 	}
