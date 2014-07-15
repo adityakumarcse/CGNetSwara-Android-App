@@ -36,7 +36,12 @@
 	    	android:name="com.MSRi.ivr.RecordAudio"
 			android:label="@string/app_name" >
 		</activity>
-		
+
+        <activity 
+	    	android:name="com.MSRi.ivr.AudioListActivity"
+			android:label="@string/app_name" >
+		</activity>
+        		
         <activity 
 	    	android:name="com.MSRi.ivr.GetAudioFiles"
 			android:label="@string/app_name" >

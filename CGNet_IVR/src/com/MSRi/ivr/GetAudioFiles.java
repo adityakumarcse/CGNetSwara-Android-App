@@ -3,26 +3,20 @@ package com.MSRi.ivr;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.Calendar;
-
+import java.io.FileOutputStream; 
+import java.net.HttpURLConnection; 
+import java.net.URL;  
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
-import android.view.View.OnClickListener;
+import android.view.View.OnClickListener; 
 import android.widget.Button;
-import android.widget.ProgressBar;
-import android.widget.Toast;
-import android.app.Activity; 
+import android.widget.ListView;
+import android.widget.ProgressBar; 
+import android.app.Activity;  
 
 public class GetAudioFiles extends Activity {
 	private static final String TAG = "GetAudioFiles";
@@ -80,7 +74,26 @@ public class GetAudioFiles extends Activity {
  
 
     private void populateListView() {
+    	File dir = new File(mMainDir);
+    	Log.e(TAG, "" + mMainDir);
+        File[] filelist = dir.listFiles();
+
+    	Log.e(TAG, "" + filelist);
     	
+        ListItem[] theNamesOfFiles = new ListItem[filelist.length];
+        Log.e(TAG, "length: " + filelist.length); 
+        
+        for (int i = 0; i < theNamesOfFiles.length; i++) {
+           theNamesOfFiles[i] = new ListItem(filelist[i].getName(), filelist[i].getAbsolutePath());
+           Log.e(TAG, " " + filelist[i].getName());
+        }
+        
+        
+        ArrayAdapterItem adapter = new ArrayAdapterItem(this, 
+				 R.layout.playlist_item, theNamesOfFiles);
+
+        ListView listViewItems = (ListView) findViewById(android.R.id.list); 
+        listViewItems.setAdapter(adapter);  
 	}
     
 
@@ -107,7 +120,8 @@ public class GetAudioFiles extends Activity {
         	 
         	String mMainDir = Environment.getExternalStorageDirectory().getAbsolutePath();
     		mMainDir += "/CGNetSwaraDownloads";
-        	String path = mMainDir + "/test1.wav";
+        	String path = mMainDir + "/test8.wav";
+        	
         	int count = 0;
         	 
          	Log.e(TAG,"?");
