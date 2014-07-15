@@ -46,7 +46,7 @@ public class RecordAudio extends Activity {
 	private MediaRecorder mRecorder;
 	  
 	/** Starts recording audio.  */
-	private Button mBack;
+	private Button mStart;
 	
 	/** Stops recording audio. */
 	private Button mStop;
@@ -58,9 +58,7 @@ public class RecordAudio extends Activity {
 	 *  connection, if not saves the audio recording in a 
 	 *  known folder - to be sent later. */
 	private Button mSendAudio;
-	
-	private Button mCamera;
-	
+	  
 	/** Displays the amount of time left - each recording can be 3 mins max */
 	private TextView mCountdown;
 
@@ -81,33 +79,41 @@ public class RecordAudio extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState); 
 		setContentView(R.layout.record_audio); 
- 
-		mBack = (Button) findViewById(R.id.start);
+		
+		mStart = (Button) findViewById(R.id.start);
 		mStop = (Button) findViewById(R.id.stop);
 		mPlayback = (Button) findViewById(R.id.playback);
 		mSendAudio = (Button) findViewById(R.id.sendAudio);
 		mCountdown = (TextView) findViewById(R.id.time); 
-		mCamera = (Button) findViewById(R.id.camera);
-		
-		// At first, the only option the user has is to record audio
-		mBack.setEnabled(true);
-		mStop.setEnabled(false);
-		mPlayback.setEnabled(false);
-		mSendAudio.setEnabled(false);
-		mCamera.setEnabled(false);
-		 
-		
+
 		mFileToBeSent = false;
 		
+		// At first, the only option the user has is to record audio
+		mStart.setVisibility(View.VISIBLE); 
+		mStop.setVisibility(View.INVISIBLE);
+		mPlayback.setVisibility(View.INVISIBLE);
+		mSendAudio.setVisibility(View.INVISIBLE); 
+		 
+		Intent intent = getIntent();
+		Bundle extras = intent.getExtras(); 
+		boolean includePhoto = extras.getBoolean("photo"); 
+		
+		if(includePhoto) { 
+            Intent i = new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            startActivityForResult(Intent.createChooser(i,
+                    "Select Picture"), SELECT_PICTURE); 
+		}
+		 
 		// Create folders for the audio files 
 		setupDirectory();
 	
-		mBack.setOnClickListener(new OnClickListener() { 
+		mStart.setOnClickListener(new OnClickListener() { 
 			@Override
 			public void onClick(View arg) { 	 
 				stopRecording();
-		    	Intent intent = new Intent(RecordAudio.this, MainActivity.class);
-		    	startActivity(intent); 
+	    		mStart.setVisibility(View.INVISIBLE);
+				mStop.setVisibility(View.VISIBLE);	  
+	    		startRecording(); 
 			}  
 		}); 
 
@@ -117,8 +123,7 @@ public class RecordAudio extends Activity {
 			public void onClick(View arg) { 
 				mStop.setEnabled(false); 
 				mPlayback.setEnabled(true);
-				mSendAudio.setEnabled(true);
-				mCamera.setEnabled(true);
+				mSendAudio.setEnabled(true); 
 				timer.cancel();   
 				stopRecording();
 			}  
@@ -128,7 +133,7 @@ public class RecordAudio extends Activity {
 			@Override
 			public void onClick(View arg) { 
 				mStop.setEnabled(false);
-				mBack.setEnabled(false); 
+				mStart.setEnabled(false); 
 				mPlayback.setEnabled(false); 
 				mSendAudio.setEnabled(true);
 				 
@@ -145,18 +150,7 @@ public class RecordAudio extends Activity {
 		    	Intent intent = new Intent(RecordAudio.this, MainActivity.class);
 		    	startActivity(intent);
 			}
-		});
-		
-		mCamera.setOnClickListener(new OnClickListener() { 
-			@Override
-			public void onClick(View arg) { 
-				 
-                Intent intent = new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(Intent.createChooser(intent,
-                        "Select Picture"), SELECT_PICTURE);
-			}
-		});
-		
+		}); 
 		
 		timer =  new CountDownTimer(3*60*1000, 1000) {
 	        public void onTick(long millis) {
@@ -168,18 +162,7 @@ public class RecordAudio extends Activity {
 	        public void onFinish() {
 	        	mStop.performClick(); 
 	        }
-	    };
-	    
-	    Runnable runnable = new Runnable() {
-	    	@Override
-	    	public void run() {  
-	    		mStop.setEnabled(true);	  
-	    		startRecording(); 
-	    	}
-	    };
-	    // Waits 11 ms - for recording to finish
-	    Handler handler = new Handler();
-	    handler.postDelayed(runnable, 11000);
+	    }; 
 	}
 
 	

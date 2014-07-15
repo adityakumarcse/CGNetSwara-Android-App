@@ -37,8 +37,7 @@ public final class R {
         public static final int user=0x7f02000d;
     }
     public static final class id {
-        public static final int action_settings=0x7f090014;
-        public static final int camera=0x7f090012;
+        public static final int action_settings=0x7f090013;
         public static final int download_more=0x7f090006;
         public static final int editTextDialogUserInput=0x7f09000a;
         public static final int icon=0x7f09000b;
@@ -50,7 +49,7 @@ public final class R {
         public static final int playback=0x7f090011;
         public static final int progressbar=0x7f090007;
         public static final int secondLine=0x7f09000c;
-        public static final int sendAudio=0x7f090013;
+        public static final int sendAudio=0x7f090012;
         public static final int start=0x7f09000f;
         public static final int stop=0x7f090010;
         public static final int textView1=0x7f090009;

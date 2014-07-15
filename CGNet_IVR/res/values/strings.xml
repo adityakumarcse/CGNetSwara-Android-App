@@ -7,8 +7,8 @@
     <string name="main_title">CGNet Swara</string>
     <string name="begin">Begin</string> 
     
-    <string name="zero">0 (बैक)</string>
-    <string name="one">1 (रोक)</string> 
+    <string name="zero">Start recording</string>
+    <string name="one">Stop</string> 
     <string name="three">3</string>
     
     <string name="record">Record message</string>

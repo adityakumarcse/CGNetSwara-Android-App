@@ -39,11 +39,13 @@ public class MainActivity extends Activity {
 	/** Opens an activity that allows a user to listen to recordings. */
 	private Button mListenMessages;
 	 
+	/** */
 	private Button mIncludeAudio;
 	
-	
+	/** */	
 	private String mPhoneNumber;
 	
+	/** */
 	private EditText mNumber;
 	
 	/** Called when the activity is first created. */
@@ -129,7 +131,9 @@ public class MainActivity extends Activity {
 		String restoredText = prefs.getString("Phone", null);
 
 		if (restoredText != null) { 
-	    	Intent intent = new Intent(this, RecordAudio.class);
+			Intent intent = new Intent(MainActivity.this, RecordAudio.class);
+	    	intent.putExtra("photo", includePhoto); 
+	    	 
 	    	startActivity(intent);
 		} else { 
 			
@@ -150,6 +154,7 @@ public class MainActivity extends Activity {
 				    public void onClick(DialogInterface dialog,int id) {
 				    	Intent intent = new Intent(MainActivity.this, RecordAudio.class);
 				    	intent.putExtra("photo", includePhoto); 
+				    	
 				    	startActivity(intent);
 				    	mPhoneNumber = userInput.getText().toString();
 				    	SharedPreferences.Editor editor = getPreferences(MODE_PRIVATE).edit();

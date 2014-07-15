@@ -120,7 +120,7 @@ public class GetAudioFiles extends Activity {
         	 
         	String mMainDir = Environment.getExternalStorageDirectory().getAbsolutePath();
     		mMainDir += "/CGNetSwaraDownloads";
-        	String path = mMainDir + "/test8.wav";
+        	String path = mMainDir + "/test10.wav";
         	
         	int count = 0;
         	 
