@@ -144,17 +144,17 @@ public class MainActivity extends Activity {
 			// set dialog message
 			alertDialogBuilder.setCancelable(false).setPositiveButton("OK",
 				  new DialogInterface.OnClickListener() {
-				    public void onClick(DialogInterface dialog,int id) {
-				    	Intent intent = new Intent(MainActivity.this, RecordAudio.class);
-				    	intent.putExtra("photo", includePhoto); 
-				    	
-				    	startActivity(intent);
+				    public void onClick(DialogInterface dialog,int id) { 
 				    	mPhoneNumber = userInput.getText().toString();
 				    	SharedPreferences.Editor editor = getPreferences(MODE_PRIVATE).edit();
 				    	editor.putString("Phone", mPhoneNumber);
 				    	editor.apply();
 				    	Log.e(TAG, "Phone number: " + mPhoneNumber);
 				    	mNumber.setText(mPhoneNumber);
+				    	
+				    	Intent intent = new Intent(MainActivity.this, RecordAudio.class);
+				    	intent.putExtra("photo", includePhoto); 
+				    	startActivity(intent);
 				    }
 				  })
 				.setNegativeButton("Cancel",
