@@ -1,30 +1,38 @@
 package com.MSRi.ivr;
 
 import java.io.File;   
+import android.util.Log;
 import java.io.FileWriter;
 import java.io.IOException; 
 
-import android.util.Log;
 
 /** 
  * 
+ *  @author Krittika D'Silva (krittika.dsilva@gmail.com)
  * */
 public class SaveUserLogs {
+	private static final String TAG = "SaveUserLogs";
 	/** CGNet Swara's main directory with audio files. */
 	private String mMainDir;
 
 	/** Folder containing all audio files that have yet to be sent. */
 	private final String mInnerDir = "/ToBeSent";
 
+	/** Path to an image chosen by the user. */
 	private String mPhotoFile = "";
 
+	/** Path to a user's audio file */
 	private String mAudioPath;
-	
+
+	/** The user's phone number. */
 	private String mPhoneNumber = "";
-	
-	public SaveUserLogs(String mainDir, String audioRecordingPath) { 
+
+	/** Given a path to a main direction, the unique audio file name and the 
+	 *  users phone number, initializes an object. */
+	public SaveUserLogs(String mainDir, String audioRecordingPath, String phone) { 
 		mMainDir = mainDir;
 		mAudioPath = audioRecordingPath;
+		mPhoneNumber = phone;
 		
 		// This folder will be queried when there's Internet - files that 
 		// need to be sent should be stored in here 
@@ -34,20 +42,16 @@ public class SaveUserLogs {
 		} 
 	} 
 
+	/** Sets the path to an image chosen by the user. */
 	public void setPhotoPath(String path) { 
 		mPhotoFile = path;
 	}
-	
-	public void setPhoneNumber(String phone) { 
-		mPhoneNumber = phone;
-	}
+ 
 
-
-	public void writeToFile() {  
-		Log.e("!!", "in the function");
-		
-		String content = mAudioPath + "," + mPhotoFile + "," + mPhoneNumber; 
-		Log.e("!!!", content);
+	/** Saves information about the user in a comma separated file. */
+	public void writeToFile() {   
+		String content = mMainDir + mInnerDir + mAudioPath + "," + mPhotoFile + "," + mPhoneNumber; 
+		Log.e(TAG, "Saving a text file: " + content);
 		File root = new File(mMainDir + "/Logs");
 		try { 
 			if (!root.exists()) {

@@ -221,9 +221,8 @@ public class RecordAudio extends Activity {
             // this will only work for images selected from gallery
             String[] projection = { MediaStore.Images.Media.DATA };
             Cursor cursor = managedQuery(uri, projection, null, null, null);
-            if( cursor != null ){
-                int column_index = cursor
-                .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            if(cursor != null){
+                int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
                 cursor.moveToFirst();
                 return cursor.getString(column_index);
             }
@@ -258,10 +257,9 @@ public class RecordAudio extends Activity {
 		 
 		mUniqueAudioRecording = "/" + date + "__" + time;
 		 
-		mUserLogs = new SaveUserLogs(mMainDir, mUniqueAudioRecording);
-		mUserLogs.setPhoneNumber(mPhoneNumber);
+		mUserLogs = new SaveUserLogs(mMainDir, mUniqueAudioRecording, mPhoneNumber); 
 		
-		mUniqueAudioRecording += ".wav"; 
+		mUniqueAudioRecording += ".wav";  
 	}
 
 	/** Releases resources back to the system.  */
@@ -366,8 +364,7 @@ public class RecordAudio extends Activity {
         return true;
     }
      
-	/** Sends the audio file to a central location 
-	 *  TODO: I can't tell if this is working  */
+	/** Sends the audio file to a central location. */
 	private void sendData() { 
 		mFileToBeSent = true;
 		Log.e("!!!", "send data");
