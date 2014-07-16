@@ -1,22 +1,26 @@
 package com.MSRi.ivr;
 
 import java.io.File;  
-import android.util.Log;
+
 import android.net.Uri;
+import android.util.Log;
 import android.os.Bundle; 
 import android.view.Menu;
 import android.view.View; 
+
 import java.util.Calendar;
 import java.io.IOException;  
+
 import android.app.Activity;  
-import android.widget.ImageView;
+import android.widget.ImageButton;
 import android.widget.Toast;
 import android.widget.Button; 
 import android.content.Intent;
+import android.os.Environment;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.os.Environment;
-import android.widget.TextView;  
+import android.widget.TextView;
+import android.widget.ImageView;  
 import android.media.MediaPlayer;
 import android.os.CountDownTimer; 
 import android.provider.MediaStore;
@@ -48,20 +52,21 @@ public class RecordAudio extends Activity {
 	private MediaRecorder mRecorder;
 	  
 	/** Starts recording audio.  */
-	private Button mStart;
+	private ImageButton mStart;
 	
 	/** Stops recording audio. */
-	private Button mStop;
+	private ImageButton mStop;
 	
 	/** Plays back the audio that the user recorded. */
-	private Button mPlayback;
+	private ImageButton mPlayback;
 	
-	private Button mBack;
+	/** */
+	private ImageButton mBack;
 	
 	/** Sends audio recording to a central location if there's an Internet 
 	 *  connection, if not saves the audio recording in a 
 	 *  known folder - to be sent later. */
-	private Button mSendAudio;
+	private ImageButton mSendAudio;
 	  
 	/** Displays the amount of time left - each recording can be 3 mins max */
 	private TextView mCountdown;
@@ -80,19 +85,21 @@ public class RecordAudio extends Activity {
     
     private ImageView mUserImage;
     
+    private String mPhoneNumber; 
+    
 	/** Called when the activity is first created. */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState); 
 		setContentView(R.layout.record_audio); 
 		
-		mStart = (Button) findViewById(R.id.start);
-		mStop = (Button) findViewById(R.id.stop);
-		mPlayback = (Button) findViewById(R.id.playback);
-		mSendAudio = (Button) findViewById(R.id.sendAudio);
+		mStart = (ImageButton) findViewById(R.id.start);
+		mStop = (ImageButton) findViewById(R.id.stop);
+		mPlayback = (ImageButton) findViewById(R.id.playback);
+		mSendAudio = (ImageButton) findViewById(R.id.sendAudio);
 		mCountdown = (TextView) findViewById(R.id.time); 
 		mUserImage = (ImageView) findViewById(R.id.userImage);
-		mBack = (Button) findViewById(R.id.backToMain);
+		mBack = (ImageButton) findViewById(R.id.backToMain);
 		
 		mFileToBeSent = false;
 		
@@ -106,6 +113,8 @@ public class RecordAudio extends Activity {
 		Intent intent = getIntent();
 		Bundle extras = intent.getExtras(); 
 		boolean includePhoto = extras.getBoolean("photo"); 
+		mPhoneNumber = extras.getString("phone");
+		
 		
 		if(includePhoto) { 
             Intent i = new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -143,7 +152,8 @@ public class RecordAudio extends Activity {
 			public void onClick(View arg) { 
 				mStart.setVisibility(View.GONE);
 				mStop.setVisibility(View.GONE); 
-				mPlayback.setVisibility(View.GONE); 
+				mPlayback.setVisibility(View.VISIBLE);
+				mPlayback.setEnabled(false);
 				mSendAudio.setVisibility(View.VISIBLE); 
 				startPlaying();
 			}
@@ -177,7 +187,7 @@ public class RecordAudio extends Activity {
 	            mCountdown.setText(text);
 	        }
 	        public void onFinish() {
-	        	mStop.performClick(); 
+	        	mPlayback.setEnabled(true);
 	        }
 	    }; 
 	}
@@ -249,6 +259,7 @@ public class RecordAudio extends Activity {
 		mUniqueAudioRecording = "/" + date + "__" + time;
 		 
 		mUserLogs = new SaveUserLogs(mMainDir, mUniqueAudioRecording);
+		mUserLogs.setPhoneNumber(mPhoneNumber);
 		
 		mUniqueAudioRecording += ".wav"; 
 	}
@@ -359,6 +370,8 @@ public class RecordAudio extends Activity {
 	 *  TODO: I can't tell if this is working  */
 	private void sendData() { 
 		mFileToBeSent = true;
+		Log.e("!!!", "send data");
+		mUserLogs.writeToFile();
 		Log.e(TAG, "2. Sending Data: Should iterate through files in the dir now");
 		Intent intent = new Intent(); 
 		intent.setAction("com.android.CUSTOM_INTENT");

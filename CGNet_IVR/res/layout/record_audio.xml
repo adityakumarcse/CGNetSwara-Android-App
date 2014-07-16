@@ -32,53 +32,70 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal" >
 
-        <Button
+        <ImageButton
             android:id="@+id/start"
             style="?android:attr/buttonStyleSmall"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dip"
             android:layout_weight="1"
+            android:src="@drawable/record_icon"
             android:background="@drawable/button_red"
-            android:text="@string/zero"
+            android:text="@string/zero" 
+            android:drawablePadding="20dp"
+            android:padding="20dip" 
             android:textSize="20sp" />
 
-        <Button
+        <ImageButton
             android:id="@+id/stop"
             style="?android:attr/buttonStyleSmall"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dip"
             android:layout_weight="1"
+            android:src="@drawable/stop_icon"
             android:background="@drawable/button_red"
             android:text="@string/one"
+            android:drawablePadding="20dp" 
+            android:padding="20dip" 
             android:textSize="20sp" />
     </LinearLayout>
  
     
-    <Button
-        android:id="@+id/playback"
-        android:layout_margin="5dip"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:background="@drawable/button_red"
-        android:text="@string/playback" 
-        android:textSize="20sp" />
-	  
-    <Button
-        android:id="@+id/sendAudio"
-        android:layout_margin="5dip"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:background="@drawable/button_red"
-        android:text="@string/send" 
-        android:textSize="20sp" />
-    
-	<Button
+        android:orientation="horizontal" >
+	    <ImageButton
+	        android:id="@+id/playback"
+	        android:layout_margin="5dip"
+	        style="?android:attr/buttonStyleSmall"
+	        android:layout_width="0dp"
+	        android:layout_height="wrap_content" 
+	        android:background="@drawable/button_red"
+	        android:text="@string/playback" 
+	        android:src="@drawable/play_icon"
+	        android:layout_weight="1"
+	        android:drawablePadding="10dp" 
+	        android:padding="10dip" 
+	        android:textSize="20sp" />
+		  
+	    <ImageButton
+	        android:id="@+id/sendAudio"
+	        android:layout_margin="5dip"
+	        style="?android:attr/buttonStyleSmall"
+	        android:layout_width="0dp"
+	        android:layout_height="wrap_content" 
+	        android:layout_weight="1"
+	        android:background="@drawable/button_red"
+	        android:text="@string/send" 
+	        android:src="@drawable/select_icon"
+	        android:drawablePadding="10dp" 
+	        android:padding="10dip"
+	        android:textSize="20sp" />
+    </LinearLayout>
+ 
+	<ImageButton
         android:id="@+id/backToMain"
         android:layout_margin="5dip"
         style="?android:attr/buttonStyleSmall"
@@ -87,6 +104,9 @@
         android:gravity="center"
         android:background="@drawable/button_red"
         android:text="@string/back" 
+        android:src="@drawable/logout_icon"
+        android:drawablePadding="10dp" 
+        android:padding="10dip"
         android:textSize="20sp" />
  
  	 

@@ -126,7 +126,8 @@ public class MainActivity extends Activity {
 		if (restoredText != null) { 
 			Intent intent = new Intent(MainActivity.this, RecordAudio.class);
 	    	intent.putExtra("photo", includePhoto); 
-	    	 
+	    	intent.putExtra("phone", restoredText);
+	    	
 	    	startActivity(intent);
 		} else { 
 			
@@ -154,6 +155,7 @@ public class MainActivity extends Activity {
 				    	
 				    	Intent intent = new Intent(MainActivity.this, RecordAudio.class);
 				    	intent.putExtra("photo", includePhoto); 
+				    	intent.putExtra("phone", mPhoneNumber);
 				    	startActivity(intent);
 				    }
 				  })

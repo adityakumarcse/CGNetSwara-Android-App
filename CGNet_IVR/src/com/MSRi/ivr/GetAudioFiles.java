@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileOutputStream; 
 import java.net.HttpURLConnection; 
 import java.net.URL;  
+
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
@@ -14,9 +15,11 @@ import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener; 
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar; 
 import android.app.Activity;  
+import android.graphics.Color;
 
 public class GetAudioFiles extends Activity {
 	private static final String TAG = "GetAudioFiles";
@@ -30,6 +33,8 @@ public class GetAudioFiles extends Activity {
 	/** */
 	ProgressBar progressBar;
 	
+	private LinearLayout layout;
+	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,8 +43,9 @@ public class GetAudioFiles extends Activity {
 		progressBar.setProgress(0);
 		progressBar.setVisibility(View.VISIBLE);
 		progressBar.setIndeterminate(false);
-
-		
+ 
+		layout = (LinearLayout)  findViewById(R.id.layout);
+		layout.setBackgroundColor(Color.parseColor("#c9c9c9"));
         mDownloadMore = (Button) findViewById(R.id.download_more);
         
 		// Create folders for the audio files 
