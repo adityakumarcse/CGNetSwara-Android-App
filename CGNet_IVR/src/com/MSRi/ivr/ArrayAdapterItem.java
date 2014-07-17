@@ -1,11 +1,12 @@
 package com.MSRi.ivr;
-
+ 
 import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class ArrayAdapterItem extends ArrayAdapter<ListItem> {
@@ -23,18 +24,21 @@ public class ArrayAdapterItem extends ArrayAdapter<ListItem> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) { 
-        if(convertView==null){
-            // inflate the layout
-            LayoutInflater inflater = ((Activity) mContext).getLayoutInflater();
-            convertView = inflater.inflate(layoutResourceId, parent, false);
-        }
-
-        // object item based on the position
+    	Activity activity = (Activity) getContext();
+		LayoutInflater inflater = activity.getLayoutInflater();
+		 
+		View rowView = inflater.inflate(R.layout.playlist_item, null);
+		
+		ImageView imageView = (ImageView) rowView.findViewById(R.id.icon);
+		TextView date = (TextView) rowView.findViewById(R.id.date);
+		TextView title = (TextView) rowView.findViewById(R.id.title);
+		 
+        // Object item based on the position
         ListItem objectItem = data[position];
-
-        // get the TextView and then set the text (item name) and tag (item ID) values
-        TextView textViewItem = (TextView) convertView.findViewById(R.id.secondLine);
-        textViewItem.setText(objectItem.fileName);  
+        
+        // Set fields
+        date.setText(objectItem.fileName);
+        
         return convertView; 
     } 
 }
