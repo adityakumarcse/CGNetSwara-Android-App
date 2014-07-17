@@ -1,5 +1,7 @@
 package com.MSRi.ivr;
  
+import java.util.ArrayList;
+
 import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -9,15 +11,14 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class ArrayAdapterItem extends ArrayAdapter<ListItem> {
+public class ArrayAdapterItem extends ArrayAdapter<RssItem> {
 
     Context mContext;
     int layoutResourceId;
-    ListItem data[] = null;
+    ArrayList<RssItem> data = null;
 
-    public ArrayAdapterItem(Context mContext, int layoutResourceId, ListItem[] data) {
-        super(mContext, layoutResourceId, data); 
-        this.layoutResourceId = layoutResourceId;
+    public ArrayAdapterItem(Context mContext, int layoutResourceId, ArrayList<RssItem> data) {
+        super(mContext, layoutResourceId, data);  
         this.mContext = mContext;
         this.data = data;
     }
@@ -34,10 +35,10 @@ public class ArrayAdapterItem extends ArrayAdapter<ListItem> {
 		TextView title = (TextView) rowView.findViewById(R.id.title);
 		 
         // Object item based on the position
-        ListItem objectItem = data[position];
+		RssItem objectItem = data.get(position);
         
         // Set fields
-        date.setText(objectItem.fileName);
+        date.setText(objectItem.getTitle());
         
         return convertView; 
     } 
