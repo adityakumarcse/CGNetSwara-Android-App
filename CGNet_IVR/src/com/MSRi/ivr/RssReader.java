@@ -1,8 +1,11 @@
 package com.MSRi.ivr;
  
 import java.util.List;
+
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
+
+import android.util.Log;
  
 public class RssReader {
 	private String rssUrl;
@@ -12,13 +15,15 @@ public class RssReader {
 	}
 
 	public List<RssItem> getItems() throws Exception {  
-		SAXParserFactory factory = SAXParserFactory.newInstance();  
-
+		SAXParserFactory factory = SAXParserFactory.newInstance(); 
 		SAXParser saxParser = factory.newSAXParser(); 
-
 		RssParseHandler handler = new RssParseHandler(); 
-
-		saxParser.parse(rssUrl, handler); 
+		 
+		try { 
+			saxParser.parse(rssUrl, handler); 
+		} catch(Exception e) { 
+			e.printStackTrace();
+		}
 
 		return handler.getItems();
 	}

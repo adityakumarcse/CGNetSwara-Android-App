@@ -3,23 +3,38 @@ package com.MSRi.ivr;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileOutputStream; 
-import java.net.HttpURLConnection; 
-import java.net.URL;  
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.jar.Attributes;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
+import org.xml.sax.helpers.DefaultHandler;
+
+import android.app.Activity;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
-import android.view.View.OnClickListener; 
+import android.view.View.OnClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.ProgressBar; 
-import android.app.Activity;  
-import android.graphics.Color;
+import android.widget.ProgressBar;
 
 public class GetAudioFiles extends Activity {
 	private static final String TAG = "GetAudioFiles";
@@ -77,30 +92,94 @@ public class GetAudioFiles extends Activity {
 		    dir.mkdir();
 		}  
 	}
- 
-
+	 
+	private List<String> item = new ArrayList<String>(); 
+	 
     private void populateListView() {
-    	File dir = new File(mMainDir);
-    	Log.e(TAG, "" + mMainDir);
-        File[] filelist = dir.listFiles();
 
-    	Log.e(TAG, "" + filelist);
-    	
-        ListItem[] theNamesOfFiles = new ListItem[filelist.length];
-        Log.e(TAG, "length: " + filelist.length); 
+        ListView listViewItems = (ListView) findViewById(android.R.id.list);
         
-        for (int i = 0; i < theNamesOfFiles.length; i++) {
-           theNamesOfFiles[i] = new ListItem(filelist[i].getName(), filelist[i].getAbsolutePath());
-           Log.e(TAG, " " + filelist[i].getName());
-        }
-        
-        
-        ArrayAdapterItem adapter = new ArrayAdapterItem(this, 
-				 R.layout.playlist_item, theNamesOfFiles);
 
-        ListView listViewItems = (ListView) findViewById(android.R.id.list); 
-        listViewItems.setAdapter(adapter);  
+        try {
+        	   URL rssUrl = new URL("http://feeds.feedburner.com/Android-er?format=xml");
+        	   SAXParserFactory mySAXParserFactory = SAXParserFactory.newInstance();
+        	   SAXParser mySAXParser = mySAXParserFactory.newSAXParser();
+        	   XMLReader myXMLReader = mySAXParser.getXMLReader();
+        	   RSSHandler myRSSHandler = new RSSHandler();
+        	   myXMLReader.setContentHandler(myRSSHandler);
+        	   InputSource myInputSource = new InputSource(rssUrl.openStream());
+        	   myXMLReader.parse(myInputSource);
+        	   
+        	  } catch (MalformedURLException e) {
+        	   // TODO Auto-generated catch block
+        	   e.printStackTrace();
+        	  } catch (ParserConfigurationException e) {
+        	   // TODO Auto-generated catch block
+        	   e.printStackTrace();
+        	  } catch (SAXException e) {
+        	   // TODO Auto-generated catch block
+        	   e.printStackTrace();
+        	  } catch (IOException e) {
+        	   // TODO Auto-generated catch block
+        	   e.printStackTrace();
+        	  }
+        	       
+        	  ArrayAdapter<String> itemAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, item);
+              listViewItems.setAdapter(itemAdapter); 
+    
+    	//new GetFiles(this, listViewItems).execute();
+    	   
 	}
+    
+    
+    private class RSSHandler extends DefaultHandler
+    {
+     final int stateUnknown = 0;
+     final int stateTitle = 1;
+     int state = stateUnknown;
+     
+   @Override
+   public void startDocument() throws SAXException {
+    // TODO Auto-generated method stub
+   }
+
+   @Override
+   public void endDocument() throws SAXException {
+    // TODO Auto-generated method stub
+   }
+
+   public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+    // TODO Auto-generated method stub
+    if (localName.equalsIgnoreCase("title"))
+    {
+     state = stateTitle;
+    }
+    else
+    {
+     state = stateUnknown;
+    }
+   }
+
+   @Override
+   public void endElement(String uri, String localName, String qName)
+     throws SAXException {
+    // TODO Auto-generated method stub
+    state = stateUnknown;
+   }
+
+   @Override
+   public void characters(char[] ch, int start, int length)
+     throws SAXException {
+    // TODO Auto-generated method stub
+    String strCharacters = new String(ch, start, length);
+    if (state == stateTitle)
+    {
+     item.add(strCharacters);
+     
+    }
+   }
+     
+    }
     
 
 	
@@ -184,5 +263,5 @@ public class GetAudioFiles extends Activity {
 				} 
 			});  
         }  
-    }  
+    }
 }
