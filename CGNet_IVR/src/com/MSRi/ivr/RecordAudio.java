@@ -1,32 +1,29 @@
 package com.MSRi.ivr;
 
-import java.io.File;  
-
-import android.net.Uri;
-import android.util.Log;
-import android.os.Bundle; 
-import android.view.Menu;
-import android.view.View; 
-
+import java.io.File;
+import java.io.IOException;
 import java.util.Calendar;
-import java.io.IOException;  
 
-import android.app.Activity;  
-import android.widget.ImageButton;
-import android.widget.Toast;
-import android.widget.Button; 
+import android.app.Activity;
 import android.content.Intent;
-import android.os.Environment;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.widget.TextView;
-import android.widget.ImageView;  
+import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
-import android.os.CountDownTimer; 
-import android.provider.MediaStore;
 import android.media.MediaRecorder;
-import android.graphics.BitmapFactory; 
-import android.view.View.OnClickListener; 
+import android.net.Uri;
+import android.os.Bundle;
+import android.os.CountDownTimer;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.util.Log;
+import android.view.Menu;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 /** This screen allows the user to record an audio message.
  *  They can then chose to send the recording off to a central location. 

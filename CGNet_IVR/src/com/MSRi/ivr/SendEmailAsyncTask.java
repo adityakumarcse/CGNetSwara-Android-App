@@ -1,16 +1,28 @@
 package com.MSRi.ivr;
 
 import java.io.File;
+
 import android.util.Log;
+
 import java.io.InputStream;
+
 import android.os.AsyncTask;
+
 import java.io.OutputStream;
+
 import android.content.Context;
+
+import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileOutputStream; 
 import java.io.FileNotFoundException;
+import java.io.InputStreamReader;
+import java.util.Scanner;
+
 import javax.mail.MessagingException;
+
 import android.telephony.TelephonyManager;
+
 import javax.mail.AuthenticationFailedException;
 
 /** This class allows to perform background operations and
@@ -44,12 +56,35 @@ class SendEmailAsyncTask extends AsyncTask <Void, Void, Boolean> {
 	/** */
 	private boolean mEmailSent = false;
 	
+	private String mTextFile;
 	
+	private String mAudioFile;
 	/** 
 	 * 
 	 * */
     public SendEmailAsyncTask(Context context, String outerDir, String innerDir, String fileName) {
     	Log.e(TAG, "5. Trying to send: " + fileName);
+    	mTextFile = outerDir + innerDir + fileName;
+    	
+    	FileInputStream fstream;
+    	String firstLine = "";
+		try {
+			 fstream = new FileInputStream(mTextFile);
+	    	 Scanner br = new Scanner(new InputStreamReader(fstream)); 
+	    	 while (br.hasNext()) {
+	    		 firstLine = br.nextLine(); 
+	    	 }
+	    	 
+		} catch (FileNotFoundException e) { 
+			e.printStackTrace();
+		}
+
+		String[] parts = firstLine.split(",");
+		 
+		mAudioFile = parts[0] + ".wav";
+		String photo = parts[1];
+		String phoneNumber = parts[2];
+    	
     	mMail = new Mail(mFromAdddress, mFromPassword);  
     	mMainDir = outerDir;
     	mInnerDir = innerDir;
@@ -58,20 +93,19 @@ class SendEmailAsyncTask extends AsyncTask <Void, Void, Boolean> {
     	String[] toArr = {mToAddress}; // multiple email addresses can be added here 
         mMail.setTo(toArr);
         mMail.setFrom(mFromAdddress);
-        mMail.setSubject("Email send on the first try.");
-        
-        // Retrieve the user's phone number - used as a form of identification
-        TelephonyManager tMgr = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-        String mPhoneNumber = tMgr.getLine1Number(); //TODO is this right?
-        
-       // String id = TelephonyManager.getDeviceId();
-        
-        
-        String body = "Email sent from phone number: " + mPhoneNumber;
+        mMail.setSubject("Audio recording from a mobile device.");
+         
+        String body = "Email sent from phone number: " + phoneNumber;
         mMail.setBody(body);
+        
         Log.e(TAG, "6. Location of file: " + mMainDir + mInnerDir + mUniqueAudioRecording);
-        try {
-			mMail.addAttachment(mMainDir + mInnerDir + mUniqueAudioRecording);
+        try { 
+			if(mAudioFile != null) {
+				mMail.addAttachment(mAudioFile);
+			}
+			if(photo != null) { 
+				mMail.addAttachment(photo);
+			}
 		} catch (Exception e) { 
 			Log.e(TAG, "Problem including an attachment " +  e.toString());
 		}
@@ -86,8 +120,11 @@ class SendEmailAsyncTask extends AsyncTask <Void, Void, Boolean> {
         try { 
         	if (mMail.send()) {
         		mEmailSent = true;
-        		moveFile(mMainDir + mInnerDir, mUniqueAudioRecording, mMainDir);
-        		Log.e(TAG, "Email was sent");
+        		
+        		File audio = new File(mAudioFile);
+        		audio.delete();
+        		File file = new File(mTextFile);
+        		file.delete(); 
         	} else { 
         		mEmailSent = false;
         		Log.e(TAG, "Email not sent"); 
