@@ -346,7 +346,7 @@ public class RecordAudio extends Activity {
 		// If the user pauses the app when they're recording a message 
 		// we're going to treat it like they paused the recording before 
 		// pausing the app
-		if(!mStop.isEnabled()) { 
+		if(mStop.getVisibility() == View.VISIBLE) { 
 			timer.cancel(); 
 			stopRecording(); 
 		}  
