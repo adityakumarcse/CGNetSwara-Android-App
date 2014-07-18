@@ -2,13 +2,20 @@ package com.MSRi.ivr;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Calendar;
+
+import javax.microedition.khronos.opengles.GL10;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.graphics.Bitmap.Config;
+import android.graphics.BitmapFactory; 
+import android.graphics.Canvas;
+import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.net.Uri;
@@ -169,7 +176,12 @@ public class RecordAudio extends Activity {
 		
 		mBack.setOnClickListener(new OnClickListener() { 
 			@Override
-			public void onClick(View arg) {   
+			public void onClick(View arg) { 
+		    	Log.e(TAG, "Going back + deleting file: " + mMainDir + mInnerDir + mUniqueAudioRecording);
+		    	File file = new File(mMainDir + mInnerDir + mUniqueAudioRecording);
+		    	if(file.exists()) {
+		    		file.delete();
+		    	}
 		    	Intent intent = new Intent(RecordAudio.this, MainActivity.class);
 		    	startActivity(intent);
 			}
@@ -196,36 +208,84 @@ public class RecordAudio extends Activity {
             if (requestCode == SELECT_PICTURE) {
             	Toast.makeText(RecordAudio.this,"You have selected an image.", 
                         Toast.LENGTH_SHORT).show();
-                Uri selectedImageUri = data.getData();
-                String selectedImagePath = getPath(selectedImageUri); 
+            	
+            	Uri selectedImageUri = data.getData();
+                String selectedImagePath = getPath(selectedImageUri);
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inSampleSize = 4;
+
+                Bitmap bitmap = BitmapFactory.	decodeFile(selectedImagePath);
+                int height = bitmap.getHeight();
+                int width = bitmap.getWidth();
+                
+                if (height > 1280 && width > 960){
+                    Bitmap imgbitmap = BitmapFactory.decodeFile(selectedImagePath, options); 
+                    Bitmap scaled = Bitmap.createScaledBitmap(imgbitmap,  width/2, height/2, false);    
+                    mUserImage.setImageBitmap(scaled); 
+                } else { 
+                	mUserImage.setImageBitmap(bitmap);
+                    System.out.println("WORKS");
+                } 
                 mUserLogs.setPhotoPath(selectedImagePath); 
-                Bitmap photo = BitmapFactory.decodeFile(selectedImagePath); 
-                mUserImage.setImageBitmap(photo);
-                 
             }
         }
     }
+	
+	public static Bitmap lessResolution (String filePath, int width, int height)
+    {   int reqHeight=width;
+        int reqWidth=height;
+         BitmapFactory.Options options = new BitmapFactory.Options();   
 
-    /**
-     * helper to retrieve the path of an image URI
-     */
-    public String getPath(Uri uri) {
-            // just some safety built in 
-            if( uri == null ) { 
-                return null;
-            }
-            // try to retrieve the image from the media store first
-            // this will only work for images selected from gallery
-            String[] projection = { MediaStore.Images.Media.DATA };
-            Cursor cursor = managedQuery(uri, projection, null, null, null);
-            if(cursor != null){
-                int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-                cursor.moveToFirst();
-                return cursor.getString(column_index);
-            }
-            // this is our fallback here
-            return uri.getPath();
+            // First decode with inJustDecodeBounds=true to check dimensions
+            options.inJustDecodeBounds = true;
+            BitmapFactory.decodeFile(filePath, options);
+
+            // Calculate inSampleSize
+            options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+
+            // Decode bitmap with inSampleSize set
+            options.inJustDecodeBounds = false;        
+
+            return BitmapFactory.decodeFile(filePath, options); 
     }
+
+  private static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
+
+    final int height = options.outHeight;
+    final int width = options.outWidth;
+    int inSampleSize = 1;
+
+    if (height > reqHeight || width > reqWidth) {
+
+        // Calculate ratios of height and width to requested height and width
+        final int heightRatio = Math.round((float) height / (float) reqHeight);
+        final int widthRatio = Math.round((float) width / (float) reqWidth);
+
+        // Choose the smallest ratio as inSampleSize value, this will guarantee
+        // a final image with both dimensions larger than or equal to the
+        // requested height and width.
+        inSampleSize = heightRatio < widthRatio ? heightRatio : widthRatio;
+    }
+    return inSampleSize;
+    }
+	 
+	public static Bitmap ScaleDownBitmap(Bitmap originalImage, float maxImageSize, boolean filter)
+    {
+        float ratio = Math.min((float)maxImageSize / originalImage.getWidth(), (float)maxImageSize / originalImage.getHeight());
+        int width = (int) Math.round(ratio * (float)originalImage.getWidth());
+        int height =(int) Math.round(ratio * (float)originalImage.getHeight());
+
+        Bitmap newBitmap = Bitmap.createScaledBitmap(originalImage, width, height, filter);
+        return newBitmap;
+    }
+	   
+	  public String getPath(Uri uri) {
+		  String[] projection = { MediaStore.Images.Media.DATA };
+		  Cursor cursor = managedQuery(uri, projection, null, null, null);
+		  int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+		  cursor.moveToFirst();
+		  return cursor.getString(column_index);
+	  }
  
 	/** Sets up file structure for audio recordings. **/
 	private void setupDirectory() {
@@ -378,7 +438,9 @@ public class RecordAudio extends Activity {
 	    if(!mFileToBeSent) {
 	    	Log.e(TAG, "Deleting file: " + mMainDir + mInnerDir + mUniqueAudioRecording);
 	    	File file = new File(mMainDir + mInnerDir + mUniqueAudioRecording);
-	    	file.delete();
+	    	if(file.exists()) {
+	    		file.delete();
+	    	}
 	    }
 	} 
 }
