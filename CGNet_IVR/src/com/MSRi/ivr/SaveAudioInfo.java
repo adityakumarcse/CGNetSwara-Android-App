@@ -10,7 +10,7 @@ import java.io.IOException;
  * 
  *  @author Krittika D'Silva (krittika.dsilva@gmail.com)
  * */
-public class SaveUserLogs {
+public class SaveAudioInfo {
 	private static final String TAG = "SaveUserLogs";
 	/** CGNet Swara's main directory with audio files. */
 	private String mMainDir;
@@ -29,7 +29,7 @@ public class SaveUserLogs {
 
 	/** Given a path to a main direction, the unique audio file name and the 
 	 *  users phone number, initializes an object. */
-	public SaveUserLogs(String mainDir, String audioRecordingPath, String phone) { 
+	public SaveAudioInfo(String mainDir, String audioRecordingPath, String phone) { 
 		mMainDir = mainDir;
 		mAudioPath = audioRecordingPath;
 		mPhoneNumber = phone;

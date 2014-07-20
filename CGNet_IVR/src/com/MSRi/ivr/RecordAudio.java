@@ -83,7 +83,7 @@ public class RecordAudio extends Activity {
     private static final int SELECT_PICTURE = 1;
 
 	/** Saves logs about the user */
-    private SaveUserLogs mUserLogs;
+    private SaveAudioInfo mUserLogs;
      
     private boolean mFileToBeSent;
     
@@ -314,7 +314,7 @@ public class RecordAudio extends Activity {
 		 
 		mUniqueAudioRecording = "/" + date + "__" + time;
 		 
-		mUserLogs = new SaveUserLogs(mMainDir, mUniqueAudioRecording, mPhoneNumber); 
+		mUserLogs = new SaveAudioInfo(mMainDir, mUniqueAudioRecording, mPhoneNumber); 
 		
 		mUniqueAudioRecording += ".wav";  
 	}
