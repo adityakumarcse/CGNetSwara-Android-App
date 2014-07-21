@@ -2,12 +2,6 @@ package com.MSRi.ivr;
 
 import java.io.File;  
 
-import com.google.analytics.tracking.android.EasyTracker;
-import com.google.analytics.tracking.android.Fields;
-import com.google.analytics.tracking.android.GoogleAnalytics;
-import com.google.analytics.tracking.android.MapBuilder;
-import com.google.analytics.tracking.android.Tracker;
-
 import android.util.Log;
 import android.os.Bundle;
 import android.view.Menu;
@@ -25,6 +19,11 @@ import android.view.LayoutInflater;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;  
 import android.view.View.OnClickListener;
+
+import com.google.analytics.tracking.android.Fields; 
+import com.google.analytics.tracking.android.GAServiceManager;
+import com.google.analytics.tracking.android.MapBuilder;  
+import com.google.analytics.tracking.android.EasyTracker;
 
 /** This is the first screen of the CGNet Swara App. 
  *  It allows the user to either record a message (which is then sent to a central location) 
@@ -68,6 +67,7 @@ public class MainActivity extends Activity {
         	    .createAppView()
         	    .build()
         	);
+        GAServiceManager.getInstance().dispatchLocalHits();
         
         String savedText = getPreferences(MODE_PRIVATE).getString("Phone", null); 
         if(savedText != null) {
@@ -77,6 +77,7 @@ public class MainActivity extends Activity {
         mRecordMessage.setOnClickListener(new OnClickListener() { 
 			@Override
 			public void onClick(View arg) { 
+				recordInput(false);
 				tracker.send(MapBuilder
 					      .createEvent("Clicks",     		// Event category (required)
 					                   "Button",  			// Event action (required)
@@ -91,6 +92,13 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View arg) { 
 				recordInput(true);
+				tracker.send(MapBuilder
+					      .createEvent("Clicks",     		// Event category (required)
+					                   "Button",  			// Event action (required)
+					                   "Record a message - include a message",  // Event label
+					                   null)            	// Event value
+					      .build()
+					  ); 
  			}  
         }); 
         
@@ -98,6 +106,13 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View arg) { 
 				loadRecordings();
+				tracker.send(MapBuilder
+					      .createEvent("Clicks",     		// Event category (required)
+					                   "Button",  			// Event action (required)
+					                   "Listen to messages",  // Event label
+					                   null)            	// Event value
+					      .build()
+					  ); 
 			}  
         }); 
         

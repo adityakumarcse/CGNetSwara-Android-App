@@ -3,7 +3,8 @@
     package="com.MSRi.ivr"
     android:versionCode="1"
     android:versionName="1.0" >
-
+ 
+         
     <uses-sdk
         android:minSdkVersion="8"
         android:targetSdkVersion="18" />
@@ -27,6 +28,7 @@
             android:configChanges="keyboardHidden|orientation"
 			android:windowSoftInputMode="stateHidden"
             android:label="@string/app_name" >
+            
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" /> 
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -63,6 +65,8 @@
 		    <action android:name="com.android.vending.INSTALL_REFERRER" />
 		  </intent-filter>
 		</receiver>
+		
+		
 		
 	</application>
     

@@ -1,10 +1,17 @@
 package com.MSRi.ivr;
 
 import java.io.File;
+
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.SystemClock;
+
 import java.util.Calendar;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.io.IOException; 
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Environment;
@@ -19,6 +26,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Chronometer;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -63,13 +71,7 @@ public class RecordAudio extends Activity {
 	 *  connection, if not saves the audio recording in a 
 	 *  known folder - to be sent later. */
 	private ImageButton mSendAudio;
-
-	/** Displays the amount of time left - each recording can be 3 mins max */
-	private TextView mCountdown;
-
-	/** Shows time remaining. */
-	private CountDownTimer timer;
-
+ 
 	/** The action code we use in our intent, 
 	 *  this way we know we're looking at the response from our own action.  */
 	private static final int SELECT_PICTURE = 1;
@@ -82,7 +84,12 @@ public class RecordAudio extends Activity {
 	private ImageView mUserImage;
 
 	private String mPhoneNumber; 
- 	
+    
+	private Chronometer chronometer;
+	
+	Bitmap bitmap = null;
+	
+	
 	/** Called when the activity is first created. */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -92,10 +99,10 @@ public class RecordAudio extends Activity {
 		mStart = (ImageButton) findViewById(R.id.start);
 		mStop = (ImageButton) findViewById(R.id.stop);
 		mPlayback = (ImageButton) findViewById(R.id.playback);
-		mSendAudio = (ImageButton) findViewById(R.id.sendAudio);
-		mCountdown = (TextView) findViewById(R.id.time); 
+		mSendAudio = (ImageButton) findViewById(R.id.sendAudio); 
 		mUserImage = (ImageView) findViewById(R.id.userImage);
 		mBack = (ImageButton) findViewById(R.id.backToMain);
+		chronometer = (Chronometer) findViewById(R.id.time);
 		
 		mFileToBeSent = false;
 
@@ -105,6 +112,8 @@ public class RecordAudio extends Activity {
 		mPlayback.setVisibility(View.GONE);
 		mSendAudio.setVisibility(View.GONE); 
 		mBack.setVisibility(View.GONE);
+		findViewById(R.id.time).setVisibility(View.INVISIBLE);
+		
 		
 		Intent intent = getIntent();
 		Bundle extras = intent.getExtras(); 
@@ -121,11 +130,23 @@ public class RecordAudio extends Activity {
 
 		// Create folders for the audio files 
 		setupDirectory();
-
+ 
+		chronometer.setOnChronometerTickListener(new Chronometer.OnChronometerTickListener() { 
+            @Override
+            public void onChronometerTick(Chronometer chronometer) {
+                if(chronometer.getText().toString().equalsIgnoreCase("2:59"))
+                  mStop.performClick();
+            }
+        });
+		
 		mStart.setOnClickListener(new OnClickListener() { 
 			@Override
-			public void onClick(View arg) { 	 
-				stopRecording();
+			public void onClick(View arg) { 
+				findViewById(R.id.time).setVisibility(View.VISIBLE);
+				chronometer.setBase(SystemClock.elapsedRealtime());
+				chronometer.start();
+				
+ 				stopRecording();
 				mStart.setVisibility(View.GONE);
 				mStop.setVisibility(View.VISIBLE);	  
 				startRecording(); 
@@ -134,16 +155,17 @@ public class RecordAudio extends Activity {
 
 		mStop.setOnClickListener(new OnClickListener() { 
 			@Override
-			public void onClick(View arg) {
-				findViewById(R.id.limit).setVisibility(View.INVISIBLE);
-				findViewById(R.id.time).setVisibility(View.INVISIBLE);
+			public void onClick(View arg) { 
+				//findViewById(R.id.limit).setVisibility(View.INVISIBLE); // TODO: Keep these two lines?
+				//findViewById(R.id.time).setVisibility(View.INVISIBLE);
+				chronometer.stop();
 				
 				mStop.setVisibility(View.GONE); 
 				mPlayback.setVisibility(View.VISIBLE);
 				mSendAudio.setVisibility(View.VISIBLE); 
-				mBack.setVisibility(View.VISIBLE);
-				timer.cancel();   
+				mBack.setVisibility(View.VISIBLE); 
 				stopRecording();
+				 
 			}  
 		});
 
@@ -172,25 +194,23 @@ public class RecordAudio extends Activity {
 		mBack.setOnClickListener(new OnClickListener() { 
 			@Override
 			public void onClick(View arg) { 
-				goBackHome();		    	 
+				goBackHome();		  
+				if(bitmap != null) {
+
+					Log.e(TAG, "recycling bitmap!!!");
+					bitmap.recycle();
+					bitmap = null;
+				}
 			}
 		}); 
-
-
-		timer =  new CountDownTimer(3*60*1000, 1000) {
-			public void onTick(long millis) {
-				int seconds = (int) (millis / 1000) % 60 ;
-				int minutes = (int) ((millis / (1000*60)) % 60); 
-				String text = String.format("%2d minutes and %02d seconds remaining", minutes, seconds);
-				mCountdown.setText(text);
-			}
-			public void onFinish() {
-				mPlayback.setEnabled(true);
-			}
-		}; 
 	}
 
 	private void goBackHome() { 
+		if(bitmap != null) {
+			Log.e(TAG, "recycling bitmap!!!");
+			bitmap.recycle();
+			bitmap = null;
+		}
 		File file = new File(mMainDir + mInnerDir + mUniqueAudioRecording);
 		if(file.exists()) {
 			Log.e(TAG, "mBack.onClick - Deleting file: " + mMainDir + mInnerDir + mUniqueAudioRecording);
@@ -211,21 +231,25 @@ public class RecordAudio extends Activity {
 				Uri selectedImageUri = data.getData();
 				String selectedImagePath = getPath(selectedImageUri);
 
-				Bitmap bitmap = BitmapFactory.decodeFile(selectedImagePath);
-
-				int height = bitmap.getHeight();
-				int width = bitmap.getWidth();  
-				if (height > 2000 || width > 2000){ 
-					Bitmap scaled = Bitmap.createScaledBitmap(bitmap,  width/2, height/2, false);    
-					mUserImage.setImageBitmap(scaled);   
-				} else { 
-					mUserImage.setImageBitmap(bitmap); 
-				} 
+				bitmap = BitmapFactory.decodeFile(selectedImagePath);
+ 
+				while(bitmap.getHeight() > 2000 || bitmap.getWidth() > 200) {  
+					bitmap = halfSize(bitmap);
+				}
+				
+				mUserImage.setImageBitmap(bitmap); 
+				 
 				mUserLogs.setPhotoPath(selectedImagePath); 
 			}
 		} else { 
 			goBackHome(); 
 		}
+	}
+	
+	private Bitmap halfSize(Bitmap input) { 
+		int height = input.getHeight();
+		int width = input.getWidth();  
+		return Bitmap.createScaledBitmap(input,  width/2, height/2, false);
 	}
 
 
@@ -297,8 +321,7 @@ public class RecordAudio extends Activity {
 		// If the user pauses the app when they're recording a message 
 		// we're going to treat it like they paused the recording before 
 		// pausing the app
-		if(mStop.getVisibility() == View.VISIBLE) { 
-			timer.cancel(); 
+		if(mStop.getVisibility() == View.VISIBLE) {  
 			stopRecording(); 
 		}  
 		stopPlayingAudio(mUserAudio);
@@ -321,9 +344,7 @@ public class RecordAudio extends Activity {
 	}
 
 	/** Creates an audio recording using the phone mic as the audio source. */
-	private void startRecording() { 
-		timer.start(); 
-
+	private void startRecording() {   
 		mRecorder = new MediaRecorder();
 		mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
 		mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
@@ -374,10 +395,9 @@ public class RecordAudio extends Activity {
 
 	/** Sends the audio file to a central location. */
 	private void sendData() { 
-		mFileToBeSent = true;
-		Log.e("!!!", "send data");
+		mFileToBeSent = true; 
 		mUserLogs.writeToFile();
-		Log.e(TAG, "2. Sending Data: Should iterate through files in the dir now");
+		Log.e(TAG, "2. Sending Data: Should iterate through files now");
 		Intent intent = new Intent(); 
 		intent.setAction("com.android.CUSTOM_INTENT");
 		sendBroadcast(intent);  
@@ -391,6 +411,12 @@ public class RecordAudio extends Activity {
 			if(file.exists()) {
 				Log.e(TAG, "onDestroy - Deleting file: " + mMainDir + mInnerDir + mUniqueAudioRecording);
 				file.delete();
+			}
+			if(bitmap != null) {
+
+				Log.e(TAG, "recycling bitmap!!!");
+				bitmap.recycle();
+				bitmap = null;
 			}
 		}
 	} 
