@@ -3,13 +3,10 @@ package com.MSRi.ivr;
 import java.io.File;
 
 import android.net.Uri;
-import android.os.Bundle;
-import android.os.Handler;
+import android.os.Bundle; 
 import android.os.SystemClock;
 
-import java.util.Calendar;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.Calendar; 
 import java.io.IOException; 
 
 import android.app.Activity;
@@ -18,19 +15,18 @@ import android.os.Environment;
 import android.database.Cursor;
 import android.graphics.Bitmap;  
 import android.media.MediaPlayer; 
-import android.os.CountDownTimer;
 import android.media.MediaRecorder;
 import android.graphics.BitmapFactory;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
-import android.view.View.OnClickListener;
+import android.widget.Toast; 
+import android.widget.ImageView; 
 import android.widget.Chronometer;
 import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.view.View.OnClickListener;
+import android.media.MediaPlayer.OnCompletionListener; 
 
 /** This screen allows the user to record an audio message.
  *  They can then chose to send the recording off to a central location. 
@@ -88,7 +84,7 @@ public class RecordAudio extends Activity {
 	private Chronometer chronometer;
 	
 	Bitmap bitmap = null;
-	
+	  
 	
 	/** Called when the activity is first created. */
 	@Override
@@ -104,14 +100,14 @@ public class RecordAudio extends Activity {
 		mBack = (ImageButton) findViewById(R.id.backToMain);
 		chronometer = (Chronometer) findViewById(R.id.time);
 		
-		mFileToBeSent = false;
-
+		mFileToBeSent = false; 
+		
 		// At first, the only option the user has is to record audio
 		mStart.setVisibility(View.VISIBLE); 
 		mStop.setVisibility(View.GONE);
 		mPlayback.setVisibility(View.GONE);
 		mSendAudio.setVisibility(View.GONE); 
-		mBack.setVisibility(View.GONE);
+		mBack.setVisibility(View.INVISIBLE);
 		findViewById(R.id.time).setVisibility(View.INVISIBLE);
 		
 		
@@ -155,9 +151,7 @@ public class RecordAudio extends Activity {
 
 		mStop.setOnClickListener(new OnClickListener() { 
 			@Override
-			public void onClick(View arg) { 
-				//findViewById(R.id.limit).setVisibility(View.INVISIBLE); // TODO: Keep these two lines?
-				//findViewById(R.id.time).setVisibility(View.INVISIBLE);
+			public void onClick(View arg) {  
 				chronometer.stop();
 				
 				mStop.setVisibility(View.GONE); 
@@ -171,12 +165,18 @@ public class RecordAudio extends Activity {
 
 		mPlayback.setOnClickListener(new OnClickListener() { 
 			@Override
-			public void onClick(View arg) { 
-				mStart.setVisibility(View.GONE);
-				mStop.setVisibility(View.GONE); 
-				mPlayback.setVisibility(View.VISIBLE); 
-				mSendAudio.setVisibility(View.VISIBLE); 
-				startPlaying();
+			public void onClick(View arg) {
+				if(mUserAudio != null && mUserAudio.isPlaying()) {
+					mUserAudio.pause();
+					mPlayback.setImageResource(R.drawable.play_icon);
+				} else {
+					mStart.setVisibility(View.GONE);
+					mStop.setVisibility(View.GONE); 
+					mPlayback.setVisibility(View.VISIBLE); 
+					mSendAudio.setVisibility(View.VISIBLE); 
+					startPlaying();
+				}
+
 			}
 		});
 
@@ -204,7 +204,7 @@ public class RecordAudio extends Activity {
 			}
 		}); 
 	}
-
+	 
 	private void goBackHome() { 
 		if(bitmap != null) {
 			Log.e(TAG, "recycling bitmap!!!");
@@ -233,10 +233,10 @@ public class RecordAudio extends Activity {
 
 				bitmap = BitmapFactory.decodeFile(selectedImagePath);
  
-				while(bitmap.getHeight() > 2000 || bitmap.getWidth() > 200) {  
+				while(bitmap.getHeight() > 2000 || bitmap.getWidth() > 2000) {  
 					bitmap = halfSize(bitmap);
 				}
-				
+				Log.e(TAG, "Bitmap height: " + bitmap.getHeight() + " width: " + bitmap.getWidth());
 				mUserImage.setImageBitmap(bitmap); 
 				 
 				mUserLogs.setPhotoPath(selectedImagePath); 
@@ -366,18 +366,20 @@ public class RecordAudio extends Activity {
 	/** Plays the generated audio recording. */
 	private void startPlaying() {
 		mUserAudio = new MediaPlayer();
+		 
 		try {
 			// Saved in the main folder 
 			mUserAudio.setDataSource(mMainDir + mInnerDir + mUniqueAudioRecording);
 			mUserAudio.prepare();
 			mUserAudio.start();
-
-			mUserAudio.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-				public void onCompletion(MediaPlayer mp) { 
-					mPlayback.setEnabled(true);
-				}
-			});
-
+  			 
+			mPlayback.setImageResource(R.drawable.stop_icon);
+			
+			mUserAudio.setOnCompletionListener(new OnCompletionListener() {
+	            public void onCompletion(MediaPlayer mp) { 
+	            	mPlayback.setImageResource(R.drawable.play_icon);
+	            }
+	        }); 
 		} catch (IOException e) {
 			Log.e(TAG, "StartPlaying() : prepare() failed");
 		} catch (Exception e) { 
