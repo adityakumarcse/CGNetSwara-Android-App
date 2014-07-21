@@ -1,6 +1,13 @@
 package com.MSRi.ivr;
 
 import java.io.File;  
+
+import com.google.analytics.tracking.android.EasyTracker;
+import com.google.analytics.tracking.android.Fields;
+import com.google.analytics.tracking.android.GoogleAnalytics;
+import com.google.analytics.tracking.android.MapBuilder;
+import com.google.analytics.tracking.android.Tracker;
+
 import android.util.Log;
 import android.os.Bundle;
 import android.view.Menu;
@@ -42,6 +49,8 @@ public class MainActivity extends Activity {
 	/** The users' phone number. */
 	private EditText mNumber;
 	
+	private EasyTracker tracker = null;
+	
 	/** Called when the activity is first created. */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +61,13 @@ public class MainActivity extends Activity {
         mListenMessages = (Button) findViewById(R.id.two);
         mIncludeAudio = (Button) findViewById(R.id.photo);
         mNumber = (EditText) findViewById(R.id.phone);
+          
+        tracker = EasyTracker.getInstance(MainActivity.this);
+        tracker.set(Fields.SCREEN_NAME, "Home Screen"); 
+        tracker.send(MapBuilder
+        	    .createAppView()
+        	    .build()
+        	);
         
         String savedText = getPreferences(MODE_PRIVATE).getString("Phone", null); 
         if(savedText != null) {
@@ -61,7 +77,13 @@ public class MainActivity extends Activity {
         mRecordMessage.setOnClickListener(new OnClickListener() { 
 			@Override
 			public void onClick(View arg) { 
-				recordInput(false);
+				tracker.send(MapBuilder
+					      .createEvent("Clicks",     		// Event category (required)
+					                   "Button",  			// Event action (required)
+					                   "Record a message",  // Event label
+					                   null)            	// Event value
+					      .build()
+					  ); 
  			}  
         }); 
         
@@ -100,6 +122,18 @@ public class MainActivity extends Activity {
         });
     }
      
+    
+	@Override
+	public void onStart() {
+		super.onStart();
+		EasyTracker.getInstance(this).activityStart(this);
+	}
+	
+	@Override
+	public void onStop() {
+		super.onStop();
+		EasyTracker.getInstance(this).activityStop(this);
+	}
 
 	/** Called when the activity is paused; begins playing the audio recording
 	 *  for the user. */
