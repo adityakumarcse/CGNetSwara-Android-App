@@ -22,5 +22,7 @@
    
     <string name="download_more">Download More</string>
     
+    <string name="limit">Audio recordings must be less than 3 minutes.</string>
+    
      
 </resources>

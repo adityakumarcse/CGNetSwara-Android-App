@@ -42,8 +42,8 @@ public final class R {
         public static final int user=0x7f020012;
     }
     public static final class id {
-        public static final int action_settings=0x7f090016;
-        public static final int backToMain=0x7f090015;
+        public static final int action_settings=0x7f090017;
+        public static final int backToMain=0x7f090016;
         public static final int date=0x7f09000d;
         public static final int download_more=0x7f090007;
         public static final int editTextDialogUserInput=0x7f09000b;
@@ -51,16 +51,17 @@ public final class R {
         public static final int info=0x7f090004;
         public static final int layout=0x7f090006;
         public static final int layout_root=0x7f090009;
+        public static final int limit=0x7f090010;
         public static final int one=0x7f090001;
         public static final int phone=0x7f090005;
         public static final int photo=0x7f090002;
-        public static final int playback=0x7f090013;
+        public static final int playback=0x7f090014;
         public static final int progressbar=0x7f090008;
-        public static final int sendAudio=0x7f090014;
-        public static final int start=0x7f090011;
-        public static final int stop=0x7f090012;
+        public static final int sendAudio=0x7f090015;
+        public static final int start=0x7f090012;
+        public static final int stop=0x7f090013;
         public static final int textView1=0x7f09000a;
-        public static final int time=0x7f090010;
+        public static final int time=0x7f090011;
         public static final int title=0x7f09000e;
         public static final int two=0x7f090003;
         public static final int user=0x7f090000;
@@ -91,6 +92,7 @@ public final class R {
         public static final int download_more=0x7f06000f;
         public static final int hello_world=0x7f060002;
         public static final int include_image=0x7f060009;
+        public static final int limit=0x7f060010;
         public static final int listen=0x7f06000a;
         public static final int main_title=0x7f060003;
         public static final int one=0x7f060006;
