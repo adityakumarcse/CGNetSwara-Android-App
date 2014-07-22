@@ -104,14 +104,15 @@ public class Mail extends javax.mail.Authenticator {
 
 			// Put parts in message 
 			msg.setContent(_multipart); 
-
+			Log.i("!!! !!" + TAG, "" + _multipart);
+			Log.i("!! !" + TAG, ""  + msg);
 			try {
 				// send email 
 				Transport.send(msg); 
 				Log.e(TAG, "Currently trying to send the email.");
 			} catch (MessagingException e) {
-				Log.e(TAG, "Trying to send email - in exception");
-				e.printStackTrace();
+				Log.e(TAG + "!", e.toString());
+				Log.e(TAG, "Trying to send email - in exception"); 
 				return false;
 			} catch(Exception e) { 
 				Log.e(TAG, "" + e); // This shouldn't happen. 
@@ -123,13 +124,15 @@ public class Mail extends javax.mail.Authenticator {
 	}    
 
 	public void addAttachment(String filename) throws Exception { 
-		_attachment = filename;
-		BodyPart messageBodyPart = new MimeBodyPart(); 
-		DataSource source = new FileDataSource(filename); 
-		messageBodyPart.setDataHandler(new DataHandler(source)); 
-		messageBodyPart.setFileName(filename); 
-
-		_multipart.addBodyPart(messageBodyPart); 
+		if(filename != null) { 
+			_attachment = filename;
+			BodyPart messageBodyPart = new MimeBodyPart(); 
+			DataSource source = new FileDataSource(filename); 
+			messageBodyPart.setDataHandler(new DataHandler(source)); 
+			messageBodyPart.setFileName(filename); 
+			Log.e("!!ATTACH", filename); 
+			_multipart.addBodyPart(messageBodyPart); 
+		}
 	} 
 
 	@Override 

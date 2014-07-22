@@ -81,10 +81,12 @@ class SendEmailAsyncTask extends AsyncTask <Void, Void, Boolean> {
 
 		String[] parts = firstLine.split(",");
 		 
-		mAudioFile = parts[0] + ".wav";
+		mAudioFile = parts[0] + ".mp3";
 		String photo = parts[1];
 		String phoneNumber = parts[2];
+    	Log.e("!!!!!!!!!!!" + TAG, "" + mAudioFile + " " + photo  + " " + phoneNumber);
     	
+		 
     	mMail = new Mail(mFromAdddress, mFromPassword);  
     	mMainDir = outerDir;
     	mInnerDir = innerDir;

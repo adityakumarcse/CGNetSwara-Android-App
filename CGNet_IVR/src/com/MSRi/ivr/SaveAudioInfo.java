@@ -19,7 +19,7 @@ public class SaveAudioInfo {
 	private final String mInnerDir = "/ToBeSent";
 
 	/** Path to an image chosen by the user. */
-	private String mPhotoFile = "";
+	private String mPhotoFile = null;
 
 	/** Path to a user's audio file */
 	private String mAudioPath;

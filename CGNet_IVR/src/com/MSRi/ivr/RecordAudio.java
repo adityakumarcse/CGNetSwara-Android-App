@@ -291,7 +291,7 @@ public class RecordAudio extends Activity {
 
 		mUserLogs = new SaveAudioInfo(mMainDir, mUniqueAudioRecording, mPhoneNumber); 
 
-		mUniqueAudioRecording += ".wav";  
+		mUniqueAudioRecording += ".mp3";  
 	}
 
 	/** Releases resources back to the system.  */
