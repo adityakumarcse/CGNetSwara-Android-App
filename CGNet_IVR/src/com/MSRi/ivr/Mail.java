@@ -124,13 +124,12 @@ public class Mail extends javax.mail.Authenticator {
 	}    
 
 	public void addAttachment(String filename) throws Exception { 
-		if(filename != null) { 
+		if(filename != null && !filename.equals("/null") && !filename.equals("null") && !filename.equals(" ")) { 
 			_attachment = filename;
 			BodyPart messageBodyPart = new MimeBodyPart(); 
 			DataSource source = new FileDataSource(filename); 
 			messageBodyPart.setDataHandler(new DataHandler(source)); 
-			messageBodyPart.setFileName(filename); 
-			Log.e("!!ATTACH", filename); 
+			messageBodyPart.setFileName(filename);  
 			_multipart.addBodyPart(messageBodyPart); 
 		}
 	} 
