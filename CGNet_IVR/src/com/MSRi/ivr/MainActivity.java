@@ -1,6 +1,7 @@
 package com.MSRi.ivr;
 
 import java.io.File;  
+import java.io.FileOutputStream;
 
 import android.util.Log;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.widget.EditText;
 import android.text.TextWatcher;
 import android.view.WindowManager;
 import android.view.LayoutInflater;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;  
 import android.view.View.OnClickListener;
@@ -74,9 +76,14 @@ public class MainActivity extends Activity {
 	    	mNumber.setText(savedText);
         }
  
+        mRecordMessage.setEnabled(true);
+        mIncludeAudio.setEnabled(true);
+        
+        
         mRecordMessage.setOnClickListener(new OnClickListener() { 
 			@Override
-			public void onClick(View arg) { 
+			public void onClick(View arg) {
+				mRecordMessage.setEnabled(false);
 				recordInput(false);
 				tracker.send(MapBuilder
 					      .createEvent("Clicks",     		// Event category (required)
@@ -91,6 +98,7 @@ public class MainActivity extends Activity {
         mIncludeAudio.setOnClickListener(new OnClickListener() { 
 			@Override
 			public void onClick(View arg) { 
+				mIncludeAudio.setEnabled(false);
 				recordInput(true);
 				tracker.send(MapBuilder
 					      .createEvent("Clicks",     		// Event category (required)
@@ -118,11 +126,13 @@ public class MainActivity extends Activity {
         
         // Creates a folder for the app's recordings
         String path = Environment.getExternalStorageDirectory().getAbsolutePath();
-        path += "/CGNetSwara";
+        path += "/Android/data/com.MSRi.ivr.cgnetswara";
         File dir = new File(path); 
         if (!dir.exists()|| !dir.isDirectory()) {
             dir.mkdirs();
         }
+        
+          
         
         // Saves the users phone number
         mNumber.addTextChangedListener(new TextWatcher(){
@@ -155,6 +165,9 @@ public class MainActivity extends Activity {
     @Override
     public void onResume() {
         super.onResume();   
+        
+        mRecordMessage.setEnabled(true);
+        mIncludeAudio.setEnabled(true);
         mNumber.clearFocus();
         mNumber.setSelected(false); 
          
@@ -175,9 +188,9 @@ public class MainActivity extends Activity {
 		if (restoredText != null) { 
 			Intent intent = new Intent(MainActivity.this, RecordAudio.class);
 	    	intent.putExtra("photo", includePhoto); 
-	    	intent.putExtra("phone", restoredText);
-	    	
+	    	intent.putExtra("phone", restoredText); 
 	    	startActivity(intent);
+	    	finish();
 		} else { 
 			
 			// get prompts.xml view
@@ -206,6 +219,7 @@ public class MainActivity extends Activity {
 				    	intent.putExtra("photo", includePhoto); 
 				    	intent.putExtra("phone", mPhoneNumber);
 				    	startActivity(intent);
+				    	finish();
 				    }
 				  })
 				.setNegativeButton("Cancel",
@@ -225,12 +239,14 @@ public class MainActivity extends Activity {
 			
 		}
     }
+     
     
     /** Opens a new activity to allow the user to view and listen to 
      *  recordings. */
     private void loadRecordings() { 
     	Intent intent = new Intent(this, GetAudioFiles.class);
     	startActivity(intent);
+    	finish();
     } 
 
     /** Inflates the menu. Currently, there aren't any meaningful items

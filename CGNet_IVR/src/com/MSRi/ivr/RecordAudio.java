@@ -119,7 +119,7 @@ public class RecordAudio extends Activity {
 		if(includePhoto) { 
 			Intent i = new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 			startActivityForResult(Intent.createChooser(i,
-					"Select Picture"), SELECT_PICTURE); 
+					"Select Picture (?)"), SELECT_PICTURE); 
 		} else { 
 			mUserImage.setVisibility(View.GONE);
 		}
@@ -188,6 +188,7 @@ public class RecordAudio extends Activity {
 						Toast.LENGTH_SHORT).show();
 				Intent intent = new Intent(RecordAudio.this, MainActivity.class);
 				startActivity(intent);
+				finish();
 			}
 		}); 
 
@@ -218,11 +219,13 @@ public class RecordAudio extends Activity {
 		}
 		Intent intent = new Intent(RecordAudio.this, MainActivity.class);
 		startActivity(intent);
+		finish();
 	}
 
 
 
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {  
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		Log.e(TAG + "!!", "on result activity called");
 		if (resultCode == RESULT_OK) {
 			if (requestCode == SELECT_PICTURE) {
 				Toast.makeText(RecordAudio.this,"You have selected an image.", 
@@ -232,14 +235,15 @@ public class RecordAudio extends Activity {
 				String selectedImagePath = getPath(selectedImageUri);
 
 				bitmap = BitmapFactory.decodeFile(selectedImagePath);
- 
-				while(bitmap.getHeight() > 2000 || bitmap.getWidth() > 2000) {  
-					bitmap = halfSize(bitmap);
+				if(bitmap != null) {
+					while(bitmap.getHeight() > 2000 || bitmap.getWidth() > 2000) {  
+						bitmap = halfSize(bitmap);
+					}
+					
+					Log.e(TAG, "Bitmap height: " + bitmap.getHeight() + " width: " + bitmap.getWidth());
+					mUserImage.setImageBitmap(bitmap);  
+					mUserLogs.setPhotoPath(selectedImagePath); 
 				}
-				Log.e(TAG, "Bitmap height: " + bitmap.getHeight() + " width: " + bitmap.getWidth());
-				mUserImage.setImageBitmap(bitmap); 
-				 
-				mUserLogs.setPhotoPath(selectedImagePath); 
 			}
 		} else { 
 			goBackHome(); 
@@ -267,7 +271,7 @@ public class RecordAudio extends Activity {
 		// This folder should have been created in MainActivity
 		// This is just in case it wasn't.
 		mMainDir = Environment.getExternalStorageDirectory().getAbsolutePath();
-		mMainDir += "/CGNetSwara";
+		mMainDir += "/Android/data/com.MSRi.ivr.cgnetswara";
 		File dir = new File(mMainDir);
 		if(!dir.exists() || !dir.isDirectory()) {
 			dir.mkdir();

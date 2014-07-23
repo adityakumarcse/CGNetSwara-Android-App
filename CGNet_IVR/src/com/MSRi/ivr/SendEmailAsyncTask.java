@@ -1,29 +1,17 @@
 package com.MSRi.ivr;
 
 import java.io.File;
-
-import android.util.Log;
-
-import java.io.InputStream;
-
-import android.os.AsyncTask;
-
-import java.io.OutputStream;
-
-import android.content.Context;
-
-import java.io.BufferedReader;
 import java.io.FileInputStream;
-import java.io.FileOutputStream; 
 import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 import java.util.Scanner;
 
+import javax.mail.AuthenticationFailedException;
 import javax.mail.MessagingException;
 
-import android.telephony.TelephonyManager;
-
-import javax.mail.AuthenticationFailedException;
+import android.content.Context;
+import android.os.AsyncTask;
+import android.util.Log;
 
 /** This class allows to perform background operations and
  *  publish results on the UI thread without having to manipulate threads and/or handlers.
@@ -81,12 +69,10 @@ class SendEmailAsyncTask extends AsyncTask <Void, Void, Boolean> {
 
 		String[] parts = firstLine.split(",");
 		 
-		mAudioFile = parts[0] + ".mp3";
+		mAudioFile = parts[0] + ".mp3"; 
 		String photo = parts[1];
-		String phoneNumber = parts[2];
-    	Log.e("!!!!!!!!!!!" + TAG, "" + mAudioFile + " " + photo  + " " + phoneNumber);
-    	
-		 
+		String phoneNumber = parts[2]; 
+		
     	mMail = new Mail(mFromAdddress, mFromPassword);  
     	mMainDir = outerDir;
     	mInnerDir = innerDir;
@@ -98,7 +84,7 @@ class SendEmailAsyncTask extends AsyncTask <Void, Void, Boolean> {
         mMail.setSubject("Audio recording from a mobile device.");
          
         String body = "Email sent from phone number: " + phoneNumber;
-        mMail.setBody(body);
+        mMail.setBody(body); 
         
         Log.e(TAG, "6. Location of file: " + mMainDir + mInnerDir + mUniqueAudioRecording);
         try { 
@@ -150,44 +136,5 @@ class SendEmailAsyncTask extends AsyncTask <Void, Void, Boolean> {
     public boolean emailSent() { 
     	return mEmailSent;
     }
-    
-    
-    private void moveFile(String inputPath, String inputFile, String outputPath) {
-    	Log.e(TAG, "inputPath: " + inputPath);
-    	Log.e(TAG, "inputFile: " + inputFile);
-    	Log.e(TAG, "outputPath: " + outputPath);
-    	
-        InputStream in = null;
-        OutputStream out = null;
-        try { 
-            //create output directory if it doesn't exist
-            File dir = new File (outputPath); 
-            if (!dir.exists()) {
-                dir.mkdirs();
-            }
-
-            in = new FileInputStream(inputPath + inputFile);        
-            out = new FileOutputStream(outputPath + inputFile);
-
-            byte[] buffer = new byte[1024];
-            int read;
-            while ((read = in.read(buffer)) != -1) {
-                out.write(buffer, 0, read);
-            }
-            in.close();
-            in = null;
-
-            // write the output file
-            out.flush();
-            out.close();
-            out = null;
-
-            // delete the original file
-            new File(inputPath + inputFile).delete();  
-        } catch (FileNotFoundException fnfe) {
-            Log.e(TAG, fnfe.getMessage());
-        } catch (Exception e) {
-            Log.e(TAG, e.getMessage());
-        }
-    }
+     
 }

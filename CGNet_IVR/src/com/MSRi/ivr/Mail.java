@@ -1,10 +1,14 @@
 package com.MSRi.ivr;
   
 import java.util.Date;
+
 import android.util.Log;
+
 import javax.mail.Session;
 import javax.mail.BodyPart;
+
 import java.util.Properties;
+
 import javax.mail.Multipart;
 import javax.mail.Transport;
 import javax.activation.CommandMap;
@@ -42,7 +46,9 @@ public class Mail extends javax.mail.Authenticator {
 
 	private boolean _debuggable; 
 
-	private Multipart _multipart; 
+	private Multipart _multipart;
+
+	private String _audiofilename = null;
 
 
 	public Mail() { 
@@ -103,9 +109,7 @@ public class Mail extends javax.mail.Authenticator {
 			_multipart.addBodyPart(messageBodyPart); 
 
 			// Put parts in message 
-			msg.setContent(_multipart); 
-			Log.i("!!! !!" + TAG, "" + _multipart);
-			Log.i("!! !" + TAG, ""  + msg);
+			msg.setContent(_multipart);  
 			try {
 				// send email 
 				Transport.send(msg); 
@@ -188,8 +192,7 @@ public class Mail extends javax.mail.Authenticator {
 	public String getSubject() { 
 		return _subject;
 	}
-	
-	 
+	  
 
 	public void setBody(String _body) { 
 		this._body = _body; 
@@ -206,4 +209,5 @@ public class Mail extends javax.mail.Authenticator {
 	public void setSubject(String string) {
 		this._subject = string;
 	}
+ 
 } 

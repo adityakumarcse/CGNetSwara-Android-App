@@ -30,7 +30,7 @@ public class Receiver extends BroadcastReceiver {
     	Log.e(TAG,  "3. In onRecieve");
 		
     	mMainDir = Environment.getExternalStorageDirectory().getAbsolutePath();
-		mMainDir += "/CGNetSwara"; 
+		mMainDir += "/Android/data/com.MSRi.ivr.cgnetswara"; 
     	ConnectivityManager cm = ((ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE));
         if (cm == null)
             return;

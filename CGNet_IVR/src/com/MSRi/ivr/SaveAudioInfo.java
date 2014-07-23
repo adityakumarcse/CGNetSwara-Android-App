@@ -26,13 +26,14 @@ public class SaveAudioInfo {
 
 	/** The user's phone number. */
 	private String mPhoneNumber = "";
-
+ 
+	
 	/** Given a path to a main direction, the unique audio file name and the 
 	 *  users phone number, initializes an object. */
-	public SaveAudioInfo(String mainDir, String audioRecordingPath, String phone) { 
+	public SaveAudioInfo(String mainDir, String audioRecordingPath, String phone) {   
 		mMainDir = mainDir;
 		mAudioPath = audioRecordingPath;
-		mPhoneNumber = phone;
+		mPhoneNumber = phone;  
 		
 		// This folder will be queried when there's Internet - files that 
 		// need to be sent should be stored in here 
@@ -46,11 +47,12 @@ public class SaveAudioInfo {
 	public void setPhotoPath(String path) { 
 		mPhotoFile = path;
 	}
+	 
  
 
 	/** Saves information about the user in a comma separated file. */
 	public void writeToFile() {   
-		String content = mMainDir + mInnerDir + mAudioPath + "," + mPhotoFile + "," + mPhoneNumber; 
+		String content = mMainDir + mInnerDir + mAudioPath + "," + mPhotoFile + "," + mPhoneNumber + "," + mAudioPath; 
 		Log.e(TAG, "Saving a text file: " + content);
 		File root = new File(mMainDir + "/Logs");
 		try { 
